@@ -1,0 +1,43 @@
+# Local development stack.
+#   docker compose up -d db     database only (run the API on the host with hot reload)
+#   docker compose up -d        database + API
+name: nestboard
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: nestboard
+      POSTGRES_PASSWORD: nestboard
+      POSTGRES_DB: nestboard
+    ports:
+      - "5432:5432"
+    volumes:
+      # Postgres 18 keeps its data under /var/lib/postgresql (not .../data).
+      - pgdata:/var/lib/postgresql
+      # Runs once, on an empty volume: creates the test database.
+      - ./server/docker/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nestboard -d nestboard"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  api:
+    build: ./server
+    environment:
+      NESTBOARD_DATABASE_URL: postgresql+asyncpg://nestboard:nestboard@db:5432/nestboard
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8000/api/v1/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

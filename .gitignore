@@ -1,0 +1,26 @@
+node_modules
+# Build output: the app (dist) and the build the end-to-end tests use (dist-e2e)
+dist/
+dist-*/
+*.local
+*.tsbuildinfo
+.vite
+test-results*
+playwright-report
+# Signed-in session the end-to-end tests save
+frontend/e2e/.auth
+# Production settings (secrets) and database backups (everyone's data)
+.env
+.env.*
+!.env.example
+*.dump
+# Logs
+*.log
+# Personal Claude Code settings (shared ones go in .claude/settings.json)
+.claude/settings.local.json
+# Personal IDE settings
+.vscode/
+# Files the operating system leaves behind
+.DS_Store
+Thumbs.db
+desktop.ini

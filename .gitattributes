@@ -1,0 +1,9 @@
+# Text files keep LF line endings everywhere, also on Windows (where core.autocrlf would turn them into CRLF):
+# generated files are compared byte for byte by the tests (logoDrawings.json, visuals.json, editor_layout.json),
+# and the Docker images run what they copy as-is.
+* text=auto eol=lf
+
+# Binary, never touched.
+*.ttf binary
+*.png binary
+*.ico binary

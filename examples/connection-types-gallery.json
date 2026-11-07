@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 4,
+  "root": {
+    "id": "root",
+    "title": "Root",
+    "position": {
+      "x": 0,
+      "y": 0
+    },
+    "children": [
+      {
+        "id": "a0",
+        "title": "From (generic)",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b0",
+        "title": "To",
+        "position": {
+          "x": 520,
+          "y": 0
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "a1",
+        "title": "From (request)",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b1",
+        "title": "To",
+        "position": {
+          "x": 1420,
+          "y": 0
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "a2",
+        "title": "From (async-message)",
+        "position": {
+          "x": 0,
+          "y": 200
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b2",
+        "title": "To",
+        "position": {
+          "x": 520,
+          "y": 200
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "a3",
+        "title": "From (publish)",
+        "position": {
+          "x": 900,
+          "y": 200
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b3",
+        "title": "To",
+        "position": {
+          "x": 1420,
+          "y": 200
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "a4",
+        "title": "From (subscribe)",
+        "position": {
+          "x": 0,
+          "y": 400
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b4",
+        "title": "To",
+        "position": {
+          "x": 520,
+          "y": 400
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "a5",
+        "title": "From (stream)",
+        "position": {
+          "x": 900,
+          "y": 400
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b5",
+        "title": "To",
+        "position": {
+          "x": 1420,
+          "y": 400
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "a6",
+        "title": "From (read)",
+        "position": {
+          "x": 0,
+          "y": 600
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b6",
+        "title": "To",
+        "position": {
+          "x": 520,
+          "y": 600
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "a7",
+        "title": "From (write)",
+        "position": {
+          "x": 900,
+          "y": 600
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b7",
+        "title": "To",
+        "position": {
+          "x": 1420,
+          "y": 600
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "a8",
+        "title": "From (read-write)",
+        "position": {
+          "x": 0,
+          "y": 800
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b8",
+        "title": "To",
+        "position": {
+          "x": 520,
+          "y": 800
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "a9",
+        "title": "From (replication)",
+        "position": {
+          "x": 900,
+          "y": 800
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b9",
+        "title": "To",
+        "position": {
+          "x": 1420,
+          "y": 800
+        },
+        "children": [],
+        "edges": []
+      }
+    ],
+    "edges": [
+      {
+        "id": "e0",
+        "from": "a0",
+        "to": "b0"
+      },
+      {
+        "id": "e1",
+        "from": "a1",
+        "to": "b1",
+        "typeId": "request",
+        "label": "POST /orders"
+      },
+      {
+        "id": "e2",
+        "from": "a2",
+        "to": "b2",
+        "typeId": "async-message"
+      },
+      {
+        "id": "e3",
+        "from": "a3",
+        "to": "b3",
+        "typeId": "publish"
+      },
+      {
+        "id": "e4",
+        "from": "a4",
+        "to": "b4",
+        "typeId": "subscribe"
+      },
+      {
+        "id": "e5",
+        "from": "a5",
+        "to": "b5",
+        "typeId": "stream"
+      },
+      {
+        "id": "e6",
+        "from": "a6",
+        "to": "b6",
+        "typeId": "read"
+      },
+      {
+        "id": "e7",
+        "from": "a7",
+        "to": "b7",
+        "typeId": "write"
+      },
+      {
+        "id": "e8",
+        "from": "a8",
+        "to": "b8",
+        "typeId": "read-write"
+      },
+      {
+        "id": "e9",
+        "from": "a9",
+        "to": "b9",
+        "typeId": "replication"
+      }
+    ]
+  }
+}

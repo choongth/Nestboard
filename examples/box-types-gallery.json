@@ -1,0 +1,510 @@
+{
+  "schemaVersion": 2,
+  "root": {
+    "id": "root",
+    "title": "Root",
+    "position": {
+      "x": 0,
+      "y": 0
+    },
+    "children": [
+      {
+        "id": "b0",
+        "title": "Customer",
+        "typeId": "actor",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b1",
+        "title": "Stripe",
+        "typeId": "external-system",
+        "technology": "Stripe",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b2",
+        "title": "Web app",
+        "typeId": "client",
+        "technology": "React",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b3",
+        "title": "DNS",
+        "typeId": "dns",
+        "technology": "Cloudflare DNS",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b4",
+        "title": "Static CDN",
+        "typeId": "cdn",
+        "technology": "Cloudflare",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b5",
+        "title": "Edge LB",
+        "typeId": "load-balancer",
+        "technology": "Nginx",
+        "position": {
+          "x": 1500,
+          "y": 0
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b6",
+        "title": "Public gateway",
+        "typeId": "api-gateway",
+        "technology": "Kong",
+        "position": {
+          "x": 0,
+          "y": 200
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b7",
+        "title": "Ingress proxy",
+        "typeId": "reverse-proxy",
+        "technology": "Envoy",
+        "position": {
+          "x": 300,
+          "y": 200
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b8",
+        "title": "Throttle",
+        "typeId": "rate-limiter",
+        "position": {
+          "x": 600,
+          "y": 200
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b9",
+        "title": "Orders API",
+        "typeId": "service",
+        "technology": "Spring Boot",
+        "position": {
+          "x": 900,
+          "y": 200
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b10",
+        "title": "Email worker",
+        "typeId": "worker",
+        "technology": "Celery",
+        "position": {
+          "x": 1200,
+          "y": 200
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b11",
+        "title": "Thumbnailer",
+        "typeId": "serverless-function",
+        "technology": "AWS Lambda",
+        "position": {
+          "x": 1500,
+          "y": 200
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b12",
+        "title": "Orders DB",
+        "typeId": "relational-db",
+        "technology": "PostgreSQL",
+        "position": {
+          "x": 0,
+          "y": 400
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b13",
+        "title": "Sessions",
+        "typeId": "nosql-db",
+        "technology": "MongoDB",
+        "position": {
+          "x": 300,
+          "y": 400
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b14",
+        "title": "Hot cache",
+        "typeId": "cache",
+        "technology": "Redis",
+        "position": {
+          "x": 600,
+          "y": 400
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b15",
+        "title": "Media bucket",
+        "typeId": "object-storage",
+        "technology": "S3",
+        "position": {
+          "x": 900,
+          "y": 400
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b16",
+        "title": "Product search",
+        "typeId": "search-engine",
+        "technology": "Elasticsearch",
+        "position": {
+          "x": 1200,
+          "y": 400
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b17",
+        "title": "Jobs queue",
+        "typeId": "message-queue",
+        "technology": "RabbitMQ",
+        "position": {
+          "x": 1500,
+          "y": 400
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b18",
+        "title": "Order events",
+        "typeId": "event-stream",
+        "technology": "Kafka",
+        "position": {
+          "x": 0,
+          "y": 600
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b19",
+        "title": "App container",
+        "typeId": "container",
+        "technology": "Docker",
+        "position": {
+          "x": 300,
+          "y": 600
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b20",
+        "title": "Cluster",
+        "typeId": "orchestrator",
+        "technology": "Kubernetes",
+        "position": {
+          "x": 600,
+          "y": 600
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b21",
+        "title": "Sign-in",
+        "typeId": "auth-service",
+        "technology": "Keycloak",
+        "position": {
+          "x": 900,
+          "y": 600
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b22",
+        "title": "Metrics",
+        "typeId": "monitoring",
+        "technology": "Grafana",
+        "position": {
+          "x": 1200,
+          "y": 600
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b23",
+        "title": "New box",
+        "position": {
+          "x": 1500,
+          "y": 600
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b24",
+        "title": "Checkout",
+        "typeId": "group",
+        "position": {
+          "x": 0,
+          "y": 800
+        },
+        "children": [
+          {
+            "id": "g1",
+            "title": "Cart",
+            "typeId": "service",
+            "position": {
+              "x": 0,
+              "y": 0
+            },
+            "children": [],
+            "edges": []
+          },
+          {
+            "id": "g2",
+            "title": "Payments",
+            "typeId": "service",
+            "position": {
+              "x": 300,
+              "y": 0
+            },
+            "children": [],
+            "edges": []
+          }
+        ],
+        "edges": []
+      },
+      {
+        "id": "b25",
+        "title": "Payments must be idempotent",
+        "typeId": "note",
+        "position": {
+          "x": 300,
+          "y": 800
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b26",
+        "title": "Unknown type (from a newer version)",
+        "typeId": "quantum-router",
+        "position": {
+          "x": 600,
+          "y": 800
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b27",
+        "title": "Analytics warehouse",
+        "typeId": "data-warehouse",
+        "technology": "Snowflake",
+        "position": {
+          "x": 900,
+          "y": 800
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b28",
+        "title": "Order workflows",
+        "typeId": "workflow-engine",
+        "technology": "Temporal",
+        "position": {
+          "x": 1200,
+          "y": 800
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b29",
+        "title": "Nightly ETL",
+        "typeId": "data-processing",
+        "technology": "Apache Spark",
+        "position": {
+          "x": 1500,
+          "y": 800
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b30",
+        "title": "Event lake",
+        "typeId": "lakehouse",
+        "technology": "Apache Iceberg",
+        "position": {
+          "x": 0,
+          "y": 1000
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b31",
+        "title": "Embeddings",
+        "typeId": "vector-db",
+        "technology": "Qdrant",
+        "position": {
+          "x": 300,
+          "y": 1000
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b32",
+        "title": "Assistant model",
+        "typeId": "ai-model",
+        "technology": "Claude",
+        "position": {
+          "x": 600,
+          "y": 1000
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b33",
+        "title": "Support agent",
+        "typeId": "ai-agent",
+        "technology": "LangGraph",
+        "position": {
+          "x": 900,
+          "y": 1000
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b34",
+        "title": "Model server",
+        "typeId": "model-serving",
+        "technology": "vLLM",
+        "position": {
+          "x": 1200,
+          "y": 1000
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b35",
+        "title": "Model router",
+        "typeId": "llm-gateway",
+        "technology": "LiteLLM",
+        "position": {
+          "x": 1500,
+          "y": 1000
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b36",
+        "title": "Mesh",
+        "typeId": "service-mesh",
+        "technology": "Istio",
+        "position": {
+          "x": 0,
+          "y": 1200
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b37",
+        "title": "Marketing site",
+        "typeId": "hosting-platform",
+        "technology": "Vercel",
+        "position": {
+          "x": 300,
+          "y": 1200
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b38",
+        "title": "Deploy pipeline",
+        "typeId": "ci-cd",
+        "technology": "GitHub Actions",
+        "position": {
+          "x": 600,
+          "y": 1200
+        },
+        "children": [],
+        "edges": []
+      },
+      {
+        "id": "b39",
+        "title": "Secrets",
+        "typeId": "secrets-manager",
+        "technology": "HashiCorp Vault",
+        "position": {
+          "x": 900,
+          "y": 1200
+        },
+        "children": [],
+        "edges": []
+      }
+    ],
+    "edges": []
+  }
+}

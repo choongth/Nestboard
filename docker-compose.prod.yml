@@ -1,0 +1,65 @@
+# Production stack: database, API and web server, reachable only through the
+# web server (http://localhost:8080 by default). Its own project name, so it
+# runs beside the development stack (docker-compose.yml) without touching its
+# containers or data.
+#
+#   cp .env.example .env        then set a database password in .env
+#   docker compose -f docker-compose.prod.yml up -d --build --wait
+name: nestboard-prod
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: nestboard
+      POSTGRES_PASSWORD: ${NESTBOARD_DB_PASSWORD:?Set NESTBOARD_DB_PASSWORD in .env (see .env.example)}
+      POSTGRES_DB: nestboard
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nestboard -d nestboard"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+  api:
+    build: ./server
+    environment:
+      NESTBOARD_DATABASE_URL: postgresql+asyncpg://nestboard:${NESTBOARD_DB_PASSWORD}@db:5432/nestboard
+      # The browser only ever talks to the web server, so the API is on the same origin.
+      NESTBOARD_CORS_ORIGINS: '["${NESTBOARD_SITE:-http://localhost:8080}"]'
+      # true once the site is served over HTTPS.
+      NESTBOARD_COOKIE_SECURE: ${NESTBOARD_COOKIE_SECURE:-false}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8000/api/v1/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build: ./frontend
+    ports:
+      - "${NESTBOARD_PORT:-8080}:80"
+    volumes:
+      # Caddy's HTTPS certificates, once it serves a domain: kept across
+      # rebuilds, so it does not ask for new ones every time.
+      - caddy_data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost/"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  caddy_data:

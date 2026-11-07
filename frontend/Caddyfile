@@ -1,0 +1,44 @@
+# The web server in production (docker-compose.prod.yml): serves the built
+# app and forwards /api to the backend, so the browser sees one address.
+#
+# Plain HTTP for local use. For a real domain, replace ":80" with the domain
+# name (e.g. "nestboard.example.com"), publish ports 80 and 443, and set
+# NESTBOARD_COOKIE_SECURE=true: Caddy then gets HTTPS certificates by itself.
+
+:80 {
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		X-Frame-Options DENY
+		-Server
+	}
+
+	handle /api/* {
+		encode zstd gzip
+		reverse_proxy api:8000
+	}
+
+	# Built files have their content hash in the name: keep them for good. One
+	# that is not there (a tab opened before a release asking for the old
+	# version's code) is a plain 404, so the app can tell and offer to reload.
+	handle /assets/* {
+		root * /srv
+		# Not the 404: going back to an older release brings its files back.
+		@found file
+		header @found Cache-Control "public, max-age=31536000, immutable"
+		file_server {
+			precompressed br gzip
+		}
+	}
+
+	# The page itself is checked every time, so a new release shows at once.
+	# Every other address (/organizations/...) is a page of the app.
+	handle {
+		root * /srv
+		header Cache-Control "no-cache"
+		try_files {path} /index.html
+		file_server {
+			precompressed br gzip
+		}
+	}
+}
