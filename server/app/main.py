@@ -1,3 +1,4 @@
+from importlib.metadata import version
 from typing import Any
 
 from fastapi import FastAPI
@@ -24,7 +25,7 @@ def create_app() -> FastAPI:
     settings = get_settings()
     app = FastAPI(
         title="Nestboard API",
-        version="0.1.0",
+        version=version("nestboard-server"),
         description=DESCRIPTION,
         openapi_url="/api/v1/openapi.json",
         docs_url="/api/v1/docs",
