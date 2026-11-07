@@ -61,7 +61,7 @@ export interface Diagram {
   edges: Record<EdgeId, Edge>;
 }
 
-// ---- File format ----
+// ---- File format (described for users in docs/file-format.md: keep its structure and version table in step) ----
 
 /**
  * Bumped whenever the file gains something an older Nestboard would drop on

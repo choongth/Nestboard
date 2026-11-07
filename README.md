@@ -34,7 +34,7 @@
 └── 框 B
 ```
 
-每个节点拥有自己的子节点,以及子节点之间的连线。两个框之间的连线,存放在它们最近公共祖先所在的那一层。
+每个节点拥有自己的子节点,以及子节点之间的连线。两个框之间的连线,存放在它们最近公共祖先所在的那一层。保存到文件时的格式见[JSON 文件格式](./docs/file-format.md)。
 
 ## 功能
 
@@ -123,41 +123,6 @@ docker compose -f docker-compose.prod.yml down                   # 停止(数据
 ```bash
 docker compose -f docker-compose.prod.yml cp ./nestboard.dump db:/tmp/nestboard.dump
 docker compose -f docker-compose.prod.yml exec db pg_restore -U nestboard -d nestboard --clean --if-exists /tmp/nestboard.dump
-```
-
-### 以后:版本管理
-
-现在"生产环境"只是"上次构建时文件夹的样子":记不下运行的是哪个版本,出了问题也不容易退回上一版。用 Git 这样的版本管理就能解决:每次发布打一个标签(tag),只从标签更新生产环境,新版本有问题就退回上一个标签。项目目前还没有使用 Git;等有真实用户使用生产环境之前,应该先把它建起来。
-
-## 数据模型(草案)
-
-下面是**保存到 JSON 文件**时的嵌套格式。在内存中,编辑器使用扁平结构(`nodes: Record<id, Node>`,每个节点记录 `parentId`),便于查找、移动、删除子树和撤销;保存和打开文件时两者互相转换。服务器上的图表不存这个文件,而是每个框、每条连线各存一行,保存时只发送改动的部分(见[后端说明](server/README.md))。每个节点的 `id` 是稳定的,以便将来支持"同一个框出现在多处"的引用。
-
-```ts
-interface Node {
-  id: string;
-  title: string;
-  typeId?: string;    // 框的类型(角色),如 "load-balancer";未设置即"通用"。不认识的值原样保留
-  technology?: string;
-  description?: string;
-  position: { x: number; y: number }; // 框尺寸固定,因此不存储 size
-  externals?: Record<string, { x: number; y: number }>; // 用户在这个框里面把外部框(按框 id)拖到的位置;没有的排在右侧
-  children: Node[];
-  edges: Edge[]; // 两端的最近公共祖先是该节点的连线(同层子节点之间,或其内部不同层级的框之间)
-}
-
-interface Edge {
-  id: string;
-  from: string; // 框 id(可在任意层级,但不能是另一端的祖先或后代)
-  to: string;   // 框 id
-  typeId?: string; // 连线类型,如 "request";未设置即"通用"。不认识的值原样保留
-  label?: string;
-}
-
-interface Document {
-  schemaVersion: number; // 当前为 5(新增外部框的位置);版本 1–4 的旧文件仍可打开
-  root: Node;
-}
 ```
 
 ## 技术栈
