@@ -87,6 +87,9 @@ class OrgInvitation(Base):
     )
     # If set, only this address can use the link.
     email: Mapped[str | None] = mapped_column(String(320))
+    # The invitee's name as the inviter wrote it (e.g. from a CSV import): it
+    # fills in the sign-up form, where they can change it.
+    name: Mapped[str | None] = mapped_column(String(100))
     # Kept if the inviter's account is deleted.
     created_by: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL")

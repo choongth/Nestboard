@@ -45,4 +45,6 @@
 
 - [x] v1.0: Help: the editor's shortcuts and a getting-started guide (File menu → Help, or press `?`)
 
-- [ ] v1.1: AI integration / MCP
+- [x] v1.1: invite up to 100 people at once from a CSV file (Invitations tab → Import from CSV…): a preview of every row, links locked to each email, names filled in on sign-up, links downloadable for a mail merge
+
+- [ ] v1.2: AI integration / MCP

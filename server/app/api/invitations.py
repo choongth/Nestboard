@@ -31,6 +31,7 @@ async def get_invitation(token: str, session: SessionDep):
         role=invitation.role,
         title=invitation.title,
         email=invitation.email,
+        name=invitation.name,
         invited_by=inviter.display_name if inviter else None,
         expires_at=invitation.expires_at,
     )

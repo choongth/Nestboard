@@ -61,6 +61,9 @@ py -3.12 -m venv .venv
 | `DELETE /orgs/{id}/members/{user_id}` | 自己(退出);Admin 移除 Member;Owner 移除任何人 |
 | `GET /orgs/{id}/invitations`、`DELETE /orgs/{id}/invitations/{invitation_id}` | Admin |
 | `POST /orgs/{id}/invitations` | Admin 邀请 Member;Owner 邀请任何角色 |
+| `POST /orgs/{id}/invitations/import`(用 CSV 一次邀请最多 100 人,见下) | 同上:Admin 导入 Member;Admin、Owner 角色的行需要 Owner |
+
+**用 CSV 批量邀请**:请求体 `{"csv": "…", "dry_run": false, "expires_in_days": 7}`。第一行是列名:`email`(必填)、`name`、`job title`、`role`(member / admin / owner,空着为 member);逗号、分号或制表符分隔;可以带 Excel 的 BOM。每行生成一个**只能由该邮箱使用**的一次性链接,`name` 用来预填注册表单。有问题的行跳过并说明原因(`missing_email`、`invalid_email`、`invalid_name`、`invalid_title`、`unknown_role`、`too_many_cells`、`duplicate_email`、`already_member`、`already_invited`、`role_needs_owner`),其余的在同一个事务里一起创建;每个 token 只在这次响应里出现。`dry_run` 只检查不创建,用于预览。整个文件不能用时(没有 email 列、未知的列、空文件、超过 100 行)返回 422 `csv_invalid`。
 
 **邀请链接**(链接中的 `token` 就是凭证):`GET /invitations/{token}`(不需要登录)、`POST /invitations/{token}/accept`(已登录的人加入)、`POST /invitations/{token}/sign-up`(注册、加入并登录)。
 

@@ -45,6 +45,8 @@ export interface Invitation {
   can_create_projects: boolean;
   /** If set, only this address can use the link. */
   email: string | null;
+  /** The invitee's name, if the inviter gave one (e.g. in a CSV import). */
+  name: string | null;
   invited_by: Person | null;
   created_at: string;
   expires_at: string;
@@ -59,6 +61,33 @@ export const createInvitation = (
   orgId: string,
   invite: { role?: OrgRole; title?: string; can_create_projects?: boolean; email?: string; expires_in_days?: number },
 ) => request<Invitation & { token: string }>("POST", `${org(orgId)}/invitations`, invite);
+
+/** One row of an imported CSV file: invited, or skipped with the reason. */
+export interface ImportedRow {
+  /** Where the row is in the file (1 is the header). */
+  line: number;
+  email: string;
+  name: string | null;
+  title: string;
+  role: string;
+  problem: { code: string; message: string } | null;
+  /** With its token, shown only now; null in a dry run or when skipped. */
+  invitation: (Invitation & { token: string }) | null;
+}
+
+export interface InvitationImport {
+  rows: ImportedRow[];
+  invited: number;
+  skipped: number;
+}
+
+/**
+ * Invites everyone in a CSV file (columns: email, and optionally name, job title, role), each with a link locked to
+ * their email; rows with a problem are skipped. `dryRun` only checks the file. A file that cannot be used as a whole
+ * fails with the code "csv_invalid".
+ */
+export const importInvitations = (orgId: string, csv: string, dryRun: boolean) =>
+  request<InvitationImport>("POST", `${org(orgId)}/invitations/import`, { csv, dry_run: dryRun });
 
 export const revokeInvitation = (orgId: string, id: string) =>
   request<void>("DELETE", `${org(orgId)}/invitations/${encodeURIComponent(id)}`);

@@ -19,7 +19,7 @@ Most drawing tools give you one flat canvas: one diagram per page. To describe a
 
 It's a web app made of a frontend and a backend (FastAPI + PostgreSQL), deployed with Docker on your own machine or server. Diagrams are stored in the backend; team members sign in, draw together in the same project, and see each other's changes live. Around the diagrams there's permission management for organizations and projects, and architecture decision records (ADRs).
 
-> ✅ **Status: v1.0 is complete.**
+> ✅ **Status: v1.1 is complete.**
 
 ---
 

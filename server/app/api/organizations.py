@@ -7,7 +7,11 @@ from app.db import SessionDep
 from app.errors import ROLE_RESPONSES
 from app.schemas.organizations import (
     CreatedInvitation,
+    ImportedRow,
+    ImportProblem,
     InvitationCreate,
+    InvitationImport,
+    InvitationImportRequest,
     InvitationOut,
     MemberOut,
     MemberUpdate,
@@ -15,7 +19,7 @@ from app.schemas.organizations import (
     OrgOut,
     OrgUpdate,
 )
-from app.services import invitations, organizations
+from app.services import invitation_import, invitations, organizations
 
 router = APIRouter(prefix="/orgs", tags=["organizations"], responses=ROLE_RESPONSES)
 
@@ -128,6 +132,44 @@ async def create_invitation(
         days=body.expires_in_days,
     )
     return CreatedInvitation(**InvitationOut.of(invitation, user, None).model_dump(), token=token)
+
+
+@router.post("/{org_id}/invitations/import", response_model=InvitationImport)
+async def import_invitations(
+    org_id: uuid.UUID, body: InvitationImportRequest, user: CurrentUser, session: SessionDep
+):
+    """Admins invite up to 100 people at once from a CSV file: one invitation
+    per row, locked to the row's email, with its name, job title and role
+    (admins and owners need an owner). Rows with a problem are skipped and
+    say why; the rest are invited together. Each token is shown only in this
+    response. With `dry_run`, nobody is invited: the rows are only checked.
+    A file that cannot be used as a whole (no email column, an unknown
+    column, more than 100 rows) is refused with 422 `csv_invalid`."""
+    rows = await invitation_import.run(
+        session, org_id, user, body.csv, dry_run=body.dry_run, days=body.expires_in_days
+    )
+    return InvitationImport(
+        rows=[
+            ImportedRow(
+                line=row.line,
+                email=row.email,
+                name=row.name,
+                title=row.title,
+                role=row.role,
+                problem=ImportProblem(code=row.problem.code, message=row.problem.message)
+                if row.problem
+                else None,
+                invitation=CreatedInvitation(
+                    **InvitationOut.of(row.invitation, user, None).model_dump(), token=row.token
+                )
+                if row.invitation is not None and row.token is not None
+                else None,
+            )
+            for row in rows
+        ],
+        invited=sum(row.invitation is not None for row in rows),
+        skipped=sum(row.problem is not None for row in rows),
+    )
 
 
 @router.delete("/{org_id}/invitations/{invitation_id}", status_code=status.HTTP_204_NO_CONTENT)

@@ -128,7 +128,7 @@ Saving sends only the boxes and connections that changed, and every change must 
 
 - Email + password. Passwords are hashed with argon2; the session lives in an httpOnly cookie; repeated failed sign-ins get progressively slower.
 - The first user to sign up becomes the **instance admin**. After that there's no open sign-up: people join only through invitations.
-- **Invitation links**: an Org Admin makes a link and sends it themselves (no mail server needed). Opening it lets you sign up or sign in and join the organization. Links expire and can be revoked.
+- **Invitation links**: an Org Admin makes a link and sends it themselves (no mail server needed). Opening it lets you sign up or sign in and join the organization. Links expire and can be revoked. Up to 100 people can also be invited at once from a CSV file (one email per row, each link usable only by that email); the Admin still sends the links themselves.
 - **Password reset**: only the instance admin can make reset links (one-time, valid 1 to 72 hours). Org Admins can't: a person may belong to other organizations too, and being able to reset their password would mean being able to get into those. Self-service reset can come once email is connected.
 
 ## 10. Pages

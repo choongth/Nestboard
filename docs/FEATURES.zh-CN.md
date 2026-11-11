@@ -161,7 +161,7 @@
 - **组织页面**(`/organizations`,打开 Nestboard 时的首页):左侧边栏是你所在的组织,可搜索;实例管理员可以 **New organization**。选择一个组织后(`/organizations/<组织 id>`),右侧上方是四个标签:**Invitations**(仅 Admin)、**Members**、**Groups**、**Projects**,默认是 Projects;网址的 `#members`、`#groups`、`#invitations` 选择标签。没有选择组织时提示先选择一个
   - Projects:搜索项目、**New project**(有权限时,创建者成为 Owner),以及每个项目的卡片;Org Admin 也能看到没有权限的项目(标为 No access),并可以**接管**(成为 Owner,记入项目的活动记录)
   - Members:职位、角色、"可以创建项目"开关、移除或退出
-  - Invitations:生成邀请链接(可指定角色、职位、限定邮箱)并复制发送,可撤销。**What can each role do?** 按钮列出 Owner / Admin / Member 各能做什么,方便选择角色。通过邀请加入后直接打开该组织
+  - Invitations:生成邀请链接(可指定角色、职位、限定邮箱)并复制发送,可撤销。**Import from CSV…** 一次邀请最多 100 人:CSV 的列为 email(必填)、name、job title、role;先预览每一行(有问题的行标出原因并跳过),确认后每人得到一个只能由自己的邮箱使用的链接,名字会预填在注册表单里。链接只显示这一次:可下载为 CSV(适合邮件合并)或全部复制,还没保存就关闭会先确认。**What can each role do?** 按钮列出 Owner / Admin / Member 各能做什么,方便选择角色。通过邀请加入后直接打开该组织
   - Groups:左边是组的树(每个组的人数),右边是选中的组:它在哪一层、组里的人和组长、下层组;组长和 Admin 可以加人、移出、设为组长,新建下层组、改名、**移动**(到另一个组下面或顶层,下层组跟着移动)、删除
 - 只属于一个组织时,打开 Nestboard 直接进入这个组织
 - 点 **Nestboard** 打开菜单:**All organizations**,以及你所在的每个组织。点项目名称可以切换到组织中的其他项目;项目 Owner 还可以在这里**重命名**或**删除项目**。离开项目时,还有改动没能送到服务器(断线)会先确认

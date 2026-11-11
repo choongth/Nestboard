@@ -62,6 +62,8 @@ export interface InvitationPreview {
   title: string;
   /** If set, only this address can use the link. */
   email: string | null;
+  /** The invitee's name as the inviter wrote it, to fill in the sign-up form. */
+  name: string | null;
   invited_by: string | null;
   expires_at: string;
 }

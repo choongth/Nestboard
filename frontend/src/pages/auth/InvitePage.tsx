@@ -82,7 +82,8 @@ function Accept({ token, me, subtitle }: Props & { me: User }) {
 function SignUp({ token, invitation, subtitle }: Props) {
   const navigate = useNavigate();
   const setUser = useSessionStore((s) => s.setUser);
-  const [name, setName] = useState("");
+  // Filled in from the invitation when the inviter gave a name (e.g. in a CSV import); theirs to change.
+  const [name, setName] = useState(invitation.name ?? "");
   const [email, setEmail] = useState(invitation.email ?? "");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);

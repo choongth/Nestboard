@@ -135,6 +135,7 @@ class InvitationOut(BaseModel):
     title: str
     can_create_projects: bool
     email: str | None
+    name: str | None = Field(description="The invitee's name, if the inviter gave one.")
     invited_by: Person | None = Field(description="None if that account was deleted.")
     created_at: datetime
     expires_at: datetime
@@ -152,6 +153,7 @@ class InvitationOut(BaseModel):
             title=invitation.title,
             can_create_projects=invitation.can_create_projects,
             email=invitation.email,
+            name=invitation.name,
             invited_by=Person.model_validate(inviter) if inviter else None,
             created_at=invitation.created_at,
             expires_at=invitation.expires_at,
@@ -166,6 +168,50 @@ class CreatedInvitation(InvitationOut):
     )
 
 
+class InvitationImportRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    csv: str = Field(
+        max_length=100_000,
+        description="The CSV file's text. The first row names the columns: `email` (required), "
+        "and optionally `name`, `job title` and `role` (member, admin or owner; member if empty). "
+        "Commas, semicolons or tabs. At most 100 people.",
+        examples=["email,name,job title,role\nbob@example.com,Bob Lee,Developer,member"],
+    )
+    dry_run: bool = Field(
+        default=False, description="Check the file and report every row, without inviting anyone."
+    )
+    expires_in_days: int = Field(default=7, ge=1, le=30)
+
+
+class ImportProblem(BaseModel):
+    code: str = Field(
+        description="`missing_email`, `invalid_email`, `invalid_name`, `invalid_title`, "
+        "`unknown_role`, `too_many_cells`, `duplicate_email`, `already_member`, "
+        "`already_invited` or `role_needs_owner`."
+    )
+    message: str
+
+
+class ImportedRow(BaseModel):
+    line: int = Field(description="Where the row is in the file (1 is the header).")
+    email: str
+    name: str | None
+    title: str
+    role: str
+    problem: ImportProblem | None = Field(description="Why this row is skipped; None if it is not.")
+    invitation: CreatedInvitation | None = Field(
+        description="The row's invitation, with its token (shown only now); None in a dry run "
+        "or when the row is skipped."
+    )
+
+
+class InvitationImport(BaseModel):
+    rows: list[ImportedRow]
+    invited: int = Field(description="Invitations created (0 in a dry run).")
+    skipped: int = Field(description="Rows with a problem, which are not invited.")
+
+
 class InvitedOrganization(BaseModel):
     id: uuid.UUID
     name: str
@@ -178,6 +224,9 @@ class InvitationPreview(BaseModel):
     role: OrgRole
     title: str
     email: str | None = Field(description="If set, only this address can use the link.")
+    name: str | None = Field(
+        description="The invitee's name as the inviter wrote it, to fill in the sign-up form."
+    )
     invited_by: str | None = Field(description="The inviter's display name.")
     expires_at: datetime
 

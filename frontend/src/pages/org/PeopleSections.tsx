@@ -32,6 +32,7 @@ import { CopyLink } from "@/components/CopyLink";
 import { NameDialog } from "@/components/NameDialog";
 import { RenameDialog } from "@/components/RenameDialog";
 import { field, neutralButton, quietButton } from "@/decisions/styles";
+import { ImportInvitations } from "./ImportInvitations";
 import { RoleGuide } from "./RoleGuide";
 
 const ORG_ROLES: OrgRole[] = ["owner", "admin", "member"];
@@ -219,7 +220,8 @@ export function Invitations({ org }: { org: Organization }) {
 
   return (
     <section aria-label="Invitations" className="flex flex-col gap-3">
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
+        <ImportInvitations org={org} onInvited={() => void reload().catch(() => {})} />
         <RoleGuide />
       </div>
       <form
@@ -266,6 +268,7 @@ export function Invitations({ org }: { org: Organization }) {
             <li key={i.id} className="flex items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-surface-hover">
               <Link2 className="size-4 shrink-0 text-fg-subtle" />
               <span className="min-w-0 flex-1 truncate text-fg">
+                {i.name && `${i.name} · `}
                 {ORG_ROLE_LABELS[i.role]}
                 {i.title && ` · ${i.title}`}
                 {i.email && <span className="text-fg-subtle"> · for {i.email}</span>}
