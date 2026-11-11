@@ -2,7 +2,7 @@
 //  - In memory (`Diagram`): flat maps keyed by id. Every node knows its parent,
 //    every edge knows the canvas it lives on. Cheap lookups, moves, subtree
 //    deletes and undo snapshots.
-//  - On disk (`DiagramFile`): the nested tree described in README.md, so a saved
+//  - On disk (`DiagramFile`): the nested tree described in docs/file-format.md, so a saved
 //    file reads naturally and diffs well in Git.
 
 export type NodeId = string;

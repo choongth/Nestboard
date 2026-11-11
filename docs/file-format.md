@@ -1,51 +1,53 @@
-# JSON 文件格式
+# JSON file format
 
-Nestboard 把一张图表写成一个 JSON 文件时用的格式。用在:
+**English** | [简体中文](./file-format.zh-CN.md)
 
-- 编辑器文件菜单中的**导出到文件** / **从文件导入**
-- 后端新建图表时的 `document`(见[后端说明](../server/README.md))
-- 仓库里的示例(`examples/`)
+The format Nestboard uses when it writes a diagram as a JSON file. It's used by:
 
-格式的定义在 `frontend/src/model/types.ts`(`FileNode`、`FileEdge`、`SCHEMA_VERSION`),读取和检查在 `frontend/src/model/serialize.ts`;后端的检查规则和报错信息与它一致。
+- **Export to file…** / **Import from file…** in the editor's File menu
+- the `document` when the backend creates a diagram (see the [backend notes](../server/README.md))
+- the examples in the repository (`examples/`)
 
-## 三种形式
+The format is defined in `frontend/src/model/types.ts` (`FileNode`, `FileEdge`, `SCHEMA_VERSION`) and read and checked in `frontend/src/model/serialize.ts`; the backend's checks and error messages match it.
 
-同一张图表有三种形式,这个文件是其中一种:
+## Three forms
 
-- **文件**(本文):嵌套的树,每个框带着它的子框和连线,便于阅读和交换
-- **编辑器内存中**:扁平结构(`nodes: Record<id, Node>`,每个节点记录 `parentId`),便于查找、移动、删除子树和撤销;保存和打开文件时两者互相转换
-- **服务器上**:每个框、每条连线各存一行,保存时只发送改动的部分(见[后端说明](../server/README.md))
+The same diagram exists in three forms; this file is one of them:
 
-## 结构
+- **The file** (this document): a nested tree, each box carrying its children and connections, easy to read and exchange
+- **In the editor's memory**: a flat structure (`nodes: Record<id, Node>`, each node recording its `parentId`), which makes finding, moving and deleting subtrees and undo easy; the two are converted into each other when saving and opening files
+- **On the server**: one row per box and per connection, and saving sends only what changed (see the [backend notes](../server/README.md))
+
+## Structure
 
 ```ts
 interface Document {
-  schemaVersion: number; // 当前为 5
+  schemaVersion: number; // currently 5
   root: Node;
 }
 
 interface Node {
   id: string;
   title: string;
-  typeId?: string;    // 框的类型(角色),如 "load-balancer";未设置即"通用"。不认识的值原样保留
+  typeId?: string;    // the box's type (role), e.g. "load-balancer"; not set means Generic. Unknown values are kept as they are
   technology?: string;
   description?: string;
-  position: { x: number; y: number }; // 框尺寸固定,因此不存储 size
-  externals?: Record<string, { x: number; y: number }>; // 用户在这个框里面把外部框(按框 id)拖到的位置;没有的排在右侧
+  position: { x: number; y: number }; // boxes have a fixed size, so no size is stored
+  externals?: Record<string, { x: number; y: number }>; // where the user dragged external boxes (by box id) inside this box; the rest line up on the right
   children: Node[];
-  edges: Edge[]; // 两端的最近公共祖先是该节点的连线(同层子节点之间,或其内部不同层级的框之间)
+  edges: Edge[]; // connections whose ends' lowest common ancestor is this node (between children, or between boxes on different levels inside it)
 }
 
 interface Edge {
   id: string;
-  from: string; // 框 id(可在任意层级,但不能是另一端的祖先或后代)
-  to: string;   // 框 id
-  typeId?: string; // 连线类型,如 "request";未设置即"通用"。不认识的值原样保留
+  from: string; // box id (on any level, but not an ancestor or descendant of the other end)
+  to: string;   // box id
+  typeId?: string; // connection type, e.g. "request"; not set means a plain Connection. Unknown values are kept as they are
   label?: string;
 }
 ```
 
-一个最小的例子:最外层有两个框,一条连线。
+A minimal example: two boxes on the top level, joined by one connection.
 
 ```json
 {
@@ -67,29 +69,29 @@ interface Edge {
 }
 ```
 
-## 规则
+## Rules
 
-打开文件时会检查这些规则,不符合时整个文件不打开,并说明是哪个框或哪条连线有问题:
+Opening a file checks these rules; if any is broken, the file doesn't open, and the message names the box or connection at fault:
 
-- 每个框、每条连线都有 `id`,在文件内不重复。`id` 是稳定的,以便将来支持"同一个框出现在多处"的引用
-- 每个框都有 `title`、`position`、`children` 和 `edges`(后两者可以是空数组)
-- 连线的两端都必须是文件中的框;一个框不能连到自己,也不能连到它的祖先或后代
-- 连线存在两端的最近公共祖先里;存错位置的连线视为错误
-- `typeId` 可以是任何非空字符串:认识的按类型显示,不认识的(例如更新版本的类型)按"通用"显示,但保存时原样保留
-- `technology` 不检查是否在类型的技术清单中:清单只限制界面上的选择
-- `externals` 里指向文件中不存在的框的位置会被丢弃
-- 不认识的字段会被丢弃,不会写回
+- Every box and connection has an `id`, unique within the file. Ids are stable, so that a future version can support the same box appearing in several places
+- Every box has `title`, `position`, `children` and `edges` (the last two may be empty arrays)
+- Both ends of a connection must be boxes in the file; a box can't connect to itself, nor to its ancestors or descendants
+- A connection is stored in its two ends' lowest common ancestor; one stored anywhere else is an error
+- `typeId` can be any non-empty string: known ones are shown as their type, unknown ones (for example from a newer version) as Generic, but they're saved exactly as they are
+- `technology` isn't checked against the type's technology list: the list only restricts what the interface lets you pick
+- Positions in `externals` for boxes that aren't in the file are dropped
+- Unknown fields are dropped and not written back
 
-## 版本
+## Versions
 
-`schemaVersion` 每次格式有变化就加一。到目前为止,每个版本都只是在前一个版本上**增加**内容,所以版本 1–5 的文件都能直接打开;打开后按当前版本保存。
+`schemaVersion` goes up by one with every change to the format. So far, every version only **added** to the one before, so files from versions 1–5 all open directly, and are saved in the current version.
 
-| 版本 | 新增 |
+| Version | Added |
 |---|---|
-| 1 | 嵌套的框和同层框之间的连线 |
-| 2 | 框的类型(`Node.typeId`) |
-| 3 | 跨层级的连线(连线存在两端的最近公共祖先里) |
-| 4 | 连线的类型(`Edge.typeId`) |
-| 5 | 外部框的位置(`Node.externals`) |
+| 1 | nested boxes, and connections between boxes on the same level |
+| 2 | box types (`Node.typeId`) |
+| 3 | connections across levels (stored in their ends' lowest common ancestor) |
+| 4 | connection types (`Edge.typeId`) |
+| 5 | positions of external boxes (`Node.externals`) |
 
-版本号比当前版本大的文件(由更新的 Nestboard 写出)不会打开,会提示先更新。将来如果某个版本改变了结构(而不只是增加),要在 `serialize.ts` 中为它写迁移,并在上表中说明。
+A file with a higher version than the current one (written by a newer Nestboard) doesn't open; the message asks you to update first. If a future version changes the structure (rather than only adding to it), it needs a migration in `serialize.ts` and a note in the table above.

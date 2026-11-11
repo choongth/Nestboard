@@ -1,46 +1,48 @@
-# 路线图
+# Roadmap
 
-- [x] v0.1:嵌套框、同层连线、放大/缩小进出、保存/打开 JSON
-- [x] v0.2:框的类型字段、带图标的技术选择器
-- [x] v0.3:跨层级连线的聚合显示(含外部框)
-- [x] v0.4:连线的类型
+**English** | [简体中文](./ROADMAP.zh-CN.md)
 
-- [x] v0.5:多选、复制粘贴、对齐辅助线
-  - [x] 多选:`Shift` / `Ctrl` + 单击、`Shift` + 拖动选择框、`Ctrl+A`、一起移动和删除、`Delete` 键
-  - [x] 复制粘贴:`Ctrl+C` / `Ctrl+X` / `Ctrl+V` / `Ctrl+D`,包含嵌套的框和内部连线,可跨层级、跨图表粘贴
-  - [x] 对齐辅助线:拖动时吸附到同层级其他框的边缘和中线,以及等间距位置,按住 `Alt` 关闭
-  - [x] 对齐与等距分布按钮(多选时在侧边栏中)
+- [x] v0.1: nested boxes, connections on the same level, zooming in and out, saving/opening JSON
+- [x] v0.2: box types, technology picker with icons
+- [x] v0.3: connections across levels, shown lifted (including external boxes)
+- [x] v0.4: connection types
 
-- [x] v0.6:ADR(架构决策记录)
-  - [x] 后端:图表存储、ADR 的状态流转、关联框和连线、ADR 之间的关系、历史版本、Markdown 导出(见[后端说明](../server/README.md))
-  - [x] 图表保存到服务器(打开 / 保存 / 冲突处理;本地 JSON 改为导入 / 导出)
-  - [x] 页面切换菜单与决策页面
+- [x] v0.5: multi-select, copy and paste, alignment guides
+  - [x] Multi-select: `Shift` / `Ctrl` + click, `Shift` + drag to box-select, `Ctrl+A`, moving and deleting together, the `Delete` key
+  - [x] Copy and paste: `Ctrl+C` / `Ctrl+X` / `Ctrl+V` / `Ctrl+D`, including nested boxes and the connections inside; pastes across levels and diagrams
+  - [x] Alignment guides: while dragging, snap to the edges and centre lines of other boxes on the level, and to equal spacing; hold `Alt` to turn off
+  - [x] Align and distribute buttons (in the sidebar when several boxes are selected)
+
+- [x] v0.6: ADRs (architecture decision records)
+  - [x] Backend: diagram storage, the ADR status flow, linking boxes and connections, relations between ADRs, version history, Markdown export (see the [backend notes](../server/README.md))
+  - [x] Diagrams saved on the server (open / save / conflict handling; local JSON became import / export)
+  - [x] Page switcher and the Decisions page
   
-- [x] v0.7:User Group Management:组织、项目、组与权限(见[设计规格](./access-design.md))
-  - [x] 第 1 步:清空数据库;账号、登录与实例管理员(后端,见[后端说明](../server/README.md))
-  - [x] 第 2 步:组织、成员角色与职位、"可以创建项目"开关、邀请链接、实例管理员的重置密码链接(后端)
-  - [x] 第 3 步:可嵌套的组、组长、成员身份向上算(后端)
-  - [x] 第 4 步:项目、项目级授权、图表移入项目、所有接口需要登录并判断权限;前端:登录、邀请、重置密码、首页(组织与项目)、项目内的编辑器和决策页面
-  - [x] 第 5 步:框上的授权(负责人)、在框里面再分配、保存图表时逐处检查权限(后端)
-  - [x] 第 6 步:ADR 属于项目并有范围(整个项目或一个框);范围内关联;提议、决定、取代按范围判断权限;历史版本记录作者(后端;前端改用项目的 ADR)
-  - [x] 第 7 步:前端:项目切换菜单、People 页面、负责人与锁定的框、只读的 Viewer、ADR 范围树、组织的成员与组、实例管理员的重置链接
-  - [x] 界面结构:顶栏改为"Nestboard ▸ 组织 / 项目 ▸ 页面";组织页面改为左侧边栏 + 右侧内容(继续细化中)
-  - [x] 组织页面(`/organizations`):组织列表 + Invitations / Members / Groups / Projects 标签;网址只用 id,全部在 `/organizations/…` 之下
-  - [x] 界面补齐:移动组、删除图表、重命名 / 删除项目、重命名 / 删除组织;剪切有负责人的框前先确认
-  - [x] 第 8 步:文档(后端说明、功能、路线图)
+- [x] v0.7: user and group management: organizations, projects, groups and permissions (see the [design spec](./access-design.md))
+  - [x] Step 1: empty the database; accounts, signing in and the instance admin (backend, see the [backend notes](../server/README.md))
+  - [x] Step 2: organizations, member roles and job titles, the "can create projects" switch, invitation links, the instance admin's password reset links (backend)
+  - [x] Step 3: nested groups, group leads, membership counted upwards (backend)
+  - [x] Step 4: projects, project-level grants, diagrams moved into projects, every endpoint requires signing in and checks permissions; frontend: sign-in, invitations, password reset, home page (organizations and projects), editor and Decisions page inside a project
+  - [x] Step 5: grants on boxes (owners), re-granting inside a box, permission checks at every change when a diagram is saved (backend)
+  - [x] Step 6: ADRs belong to a project and have a scope (the whole project or one box); links within the scope; proposing, deciding and superseding checked against the scope; history records the author (backend; the frontend switched to project ADRs)
+  - [x] Step 7: frontend: project switcher, People page, owners and locked boxes, read-only Viewers, ADR scope tree, organization members and groups, the instance admin's reset links
+  - [x] Layout: the top bar became "Nestboard ▸ organization / project ▸ page"; the organizations page became a left sidebar + content on the right (still being refined)
+  - [x] Organizations page (`/organizations`): organization list + Invitations / Members / Groups / Projects tabs; addresses use ids only, all under `/organizations/…`
+  - [x] Filling the gaps: moving groups, deleting diagrams, renaming / deleting projects, renaming / deleting organizations; confirming before cutting boxes that have owners
+  - [x] Step 8: docs (backend notes, features, roadmap)
 
-- [x] v0.8:导出为 PDF
-  - [x] 后端:每层一张图,像报告一样深度优先排列;封面(不写导出人)、目录页、按层级嵌套的标题和书签、"Diagram n" 编号;按编辑器的样子画图(框、类型、技术图标、连线样式、跨层连线、外部框),文字可搜索;可只导出一个框的内部;A4 / Letter(见[后端说明](../server/README.md))
-  - [x] 前端:文件菜单中的 Export as PDF…,可选只导出当前框的内部和纸张大小;有未保存的改动时先保存(见[功能说明](./FEATURES.md))
+- [x] v0.8: export as PDF
+  - [x] Backend: one diagram per level, ordered depth first like a report; cover page (without the exporter's name), table of contents, headings and bookmarks nested by level, "Diagram n" numbering; drawn the way the editor draws (boxes, types, technology icons, connection styles, cross-level connections, external boxes), with searchable text; can export just the inside of one box; A4 / Letter (see the [backend notes](../server/README.md))
+  - [x] Frontend: Export as PDF… in the File menu, with a choice to export only the inside of the current box and the paper size; unsaved changes are saved first (see [Features](./FEATURES.md))
 
-- [x] v0.9:实时协作
-  - [x] 第 1 步:图表改为按框、连线分表存储;保存只发送改动的框和连线,只写这几行;框不能再移到另一个框里(见[后端说明](../server/README.md))
-  - [x] 第 2 步(后端):实时连接(WebSocket);保存只发改了的字段,做在当前的图表上,同一字段后到的生效,已删除的跳过;每次保存、改名、删除都按顺序告诉打开着图表的人;转告每个人在做的事(所在层级、选中、指针、拖动);权限变了时重新检查,失去权限或退出登录时关闭连接
-  - [x] 第 3 步(编辑器):改动边做边保存,不再需要 Ctrl+S;新图表在第一个改动时存到服务器;收到别人的改动;撤销只撤销自己的改动;断线重连,改动重新送出;连接状态(见[功能说明](./FEATURES.md))
-  - [x] 第 4 步:在场的人(头像、所在层级、选中的框、点头像跳到他们那层)、实时指针、拖动中的框(见[功能说明](./FEATURES.md))
-  - [x] 第 5 步:权限、改名、删除实时生效(锁和负责人马上更新;失去权限或图表被删除时说明原因并关闭)
-  - [x] 第 6 步:文档,通过生产环境检查(正式构建经 Caddy:实时连接、两个浏览器互相看到改动、在场的人和指针)
+- [x] v0.9: live collaboration
+  - [x] Step 1: diagrams stored as separate rows for boxes and connections; saving sends and writes only the boxes and connections that changed; boxes can no longer be moved into another box (see the [backend notes](../server/README.md))
+  - [x] Step 2 (backend): live connection (WebSocket); saves send only the changed fields and apply to the current diagram, the later change to a field wins, deleted items are skipped; every save, rename and delete is passed, in order, to everyone with the diagram open; what each person is doing is relayed (level, selection, pointer, dragging); permissions are rechecked when they change, and the connection closes when access is lost or the user signs out
+  - [x] Step 3 (editor): changes save as you make them, no more Ctrl+S; a new diagram is stored on the server at its first change; others' changes arrive; undo only undoes your own changes; reconnecting after a dropped connection and resending changes; connection status (see [Features](./FEATURES.md))
+  - [x] Step 4: who's here (avatars, their level, their selected boxes, click an avatar to go to their level), live pointers, boxes being dragged (see [Features](./FEATURES.md))
+  - [x] Step 5: permissions, renames and deletions take effect live (locks and owners update at once; losing access or the diagram being deleted is explained, then it closes)
+  - [x] Step 6: docs, and a check on the production stack (production build behind Caddy: live connection, two browsers seeing each other's changes, presence and pointers)
 
-- [x] v1.0:帮助:编辑器的快捷键与入门介绍(文件菜单 → Help,或按 `?`)
+- [x] v1.0: Help: the editor's shortcuts and a getting-started guide (File menu → Help, or press `?`)
 
-- [ ] v1.1:AI 集成 / MCP
+- [ ] v1.1: AI integration / MCP

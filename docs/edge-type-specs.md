@@ -1,85 +1,87 @@
-# 连线类型(Connection Type)设计规格
+# Connection types: design spec
 
-## 1. 目标与范围
+**English** | [简体中文](./edge-type-specs.zh-CN.md)
 
-和[框类型](./box-type-specs.md)一样,第一阶段服务于**系统设计学习与面试**:让人一眼看出一条连线是什么关系(同步调用、异步消息、读写、复制等),而不只是"有连接"。
+## 1. Goals and scope
 
-## 2. 核心原则
+Like [box types](./box-type-specs.md), the first phase serves **learning system design and interviews**: show at a glance what relationship a connection is (synchronous call, asynchronous message, read/write, replication and so on), rather than just "connected".
 
-1. **类型 ≠ 标签。** 类型描述关系的**种类**("调用"),标签是用户写的具体内容("POST /orders")。两者独立存储,可同时存在。
-2. **类型是数据。** 连线只存一个字符串 `typeId`;名称、类别、图标、线型都放在类型注册表里(`frontend/src/registry/edgeTypes.ts`),与框类型共用同一套注册表机制。
-3. **向前兼容。** 不认识的 `typeId` 按"通用连线"绘制,但保存时**原样保留**。
-4. **不单靠颜色区分。** 每种类型有独立的线型组合(笔画 + 流动 + 两端标记)和独立图标;连线本身统一用连线色。
-5. **类型不限制连接。** 任何类型都可以连接任何两个框,不根据框类型做校验或推断。
+## 2. Core principles
 
-## 3. 数据模型
+1. **Type ≠ label.** The type describes the **kind** of relationship ("Calls"); the label is what the user writes ("POST /orders"). They're stored separately and can both be present.
+2. **Types are data.** A connection stores only a string `typeId`; names, categories, icons and line styles live in the type registry (`frontend/src/registry/edgeTypes.ts`), which uses the same registry mechanism as box types.
+3. **Forward compatible.** An unknown `typeId` is drawn as a plain connection but **kept exactly** on save.
+4. **Never rely on colour alone.** Each type has its own combination of line style (stroke + flow + end markers) and its own icon; the lines themselves all use the connection colour.
+5. **Types don't restrict connections.** Any type can join any two boxes; nothing is checked or inferred from box types.
+
+## 3. Data model
 
 ```ts
 interface Edge {
   id: string;
   from: string;
   to: string;
-  typeId?: string; // 未设置时按 "generic" 处理;不认识的值原样保留
+  typeId?: string; // treated as "generic" when not set; unknown values are kept as they are
   label?: string;
 }
 ```
 
-- 文件格式版本升到 **4**;版本 1–3 的旧文件照常打开(连线都没有类型),保存时写成版本 4。
-- 选择"通用连线"时不写 `typeId`,与新建的连线完全相同。
-- 后端(`server/app/diagram_format.py`)与前端(`frontend/src/model/serialize.ts`)使用相同规则和错误信息,修改格式时两边必须同步。
+- The file format version went up to **4**; files from versions 1–3 open as before (none of their connections have types) and are saved as version 4. (The format is now at version 5; see [JSON file format](./file-format.md).)
+- Choosing "Connection" (the plain type) writes no `typeId`, exactly like a new connection.
+- The backend (`server/app/diagram_format.py`) and the frontend (`frontend/src/model/serialize.ts`) use the same rules and error messages; a format change must be made in both.
 
-## 4. 方向约定
+## 4. Direction
 
-连线从"执行动作的一方"指向"另一方"(如"读取":读取方 → 数据库)。箭头表示数据或请求的流向,因此"读取"和"消费"的箭头画在**起点**,指回读取方 / 消费方。
+A connection points from "the side that acts" to "the other side" (e.g. "Reads from": reader → database). The arrow shows which way data or requests flow, so "Reads from" and "Consumes from" put their arrow at the **start**, pointing back at the reader / consumer.
 
-## 5. 内置类型清单(第一阶段)
+## 5. Built-in types (first phase)
 
-共 10 种,分 3 类。`id` 一经发布即属于文件格式,**只增不改不删**;改名只改显示名称。
+10 types in 3 categories. Once published, an `id` is part of the file format: **only add, never change or remove**; to rename, change only the display name.
 
-| 类别 | id | 名称 | 标签上的动词 | 笔画 | 流动 | 起点 | 终点 |
+| Category | id | Label | Verb on the label | Stroke | Flow | Start | End |
 |---|---|---|---|---|---|---|---|
-| 通用 | `generic` | Connection | Connects to | 虚线 | 正常 | — | 实心箭头 |
-| 通信 | `request` | Calls (sync request) | Calls | 实线 | — | — | 实心箭头 |
-| 通信 | `async-message` | Sends message / event | Sends to | 虚线 | — | — | 空心箭头 |
-| 通信 | `publish` | Publishes to | Publishes to | 虚线 | — | 圆点 | 实心箭头 |
-| 通信 | `subscribe` | Consumes from | Consumes from | 虚线 | — | 实心箭头 | — |
-| 通信 | `stream` | Streams to (real-time) | Streams to | 长虚线 | 快 | — | 实心箭头 |
-| 数据 | `read` | Reads from | Reads from | 点线 | — | 实心箭头 | — |
-| 数据 | `write` | Writes to | Writes to | 点线 | — | — | 实心箭头 |
-| 数据 | `read-write` | Reads & writes | Reads & writes | 点线 | — | 实心箭头 | 实心箭头 |
-| 数据 | `replication` | Replicates to | Replicates to | 双线 | — | — | 实心箭头 |
+| General | `generic` | Connection | Connects to | dashed | normal | — | filled arrow |
+| Communication | `request` | Calls (sync request) | Calls | solid | — | — | filled arrow |
+| Communication | `async-message` | Sends message / event | Sends to | dashed | — | — | open arrow |
+| Communication | `publish` | Publishes to | Publishes to | dashed | — | dot | filled arrow |
+| Communication | `subscribe` | Consumes from | Consumes from | dashed | — | filled arrow | — |
+| Communication | `stream` | Streams to (real-time) | Streams to | long-dashed | fast | — | filled arrow |
+| Data | `read` | Reads from | Reads from | dotted | — | filled arrow | — |
+| Data | `write` | Writes to | Writes to | dotted | — | — | filled arrow |
+| Data | `read-write` | Reads & writes | Reads & writes | dotted | — | filled arrow | filled arrow |
+| Data | `replication` | Replicates to | Replicates to | double | — | — | filled arrow |
 
-- "通用连线"保持引入类型之前的外观,已有的图不会变样。
-- 数据类统一用点线,靠两端标记区分。
+- The plain "Connection" keeps the look connections had before types existed, so existing diagrams don't change.
+- All data types use dotted lines and are told apart by their end markers.
 
-## 6. 界面行为
+## 6. Interface behaviour
 
-- **侧边栏**:选中连线后,"类型"选择器位于两端信息下方、标签上方;按类别分组,带图标、搜索,每个选项右侧显示该类型的**线型示例**。
-- **画布**:连线按类型绘制线型与两端标记;选中时整体变亮。
-- **标签**:有类型的连线在标签前显示类型图标;用户没写标签时,显示该类型的动词(斜体),让类型在画布上可见。通用连线没写标签时不显示标签。
-- **提升 / 外部连线**:保持各自的线型,只是整体变淡(与第三版跨层级连线一致)。
-- **未知类型**:按通用连线绘制;类型选择器显示原始 `typeId` 并标注"unknown type"。
-- 类型选择**计入撤销历史**;更改类型不影响标签。
+- **Sidebar**: with a connection selected, the "Type" picker sits below the information about its ends and above the label; grouped by category, with icons and search, and a **sample of the line style** to the right of each option.
+- **Canvas**: connections are drawn with their type's line style and end markers; a selected connection gets brighter.
+- **Label**: a typed connection shows the type's icon before its label; when the user hasn't written a label, the type's verb is shown (in italics) so the type is visible on the canvas. A plain connection without a label shows no label.
+- **Lifted / external connections**: keep their own line styles, only fainter (as with cross-level connections since v0.3).
+- **Unknown types**: drawn as a plain connection; the type picker shows the stored `typeId`, marked "unknown type".
+- Choosing a type **is part of the undo history**; changing the type leaves the label alone.
 
-## 7. 后续预留
+## 7. Reserved for later
 
-- **协议字段**(HTTP、gRPC、AMQP、Kafka…):类似框的"技术"字段,按类型给出清单并显示标志。第一阶段不做。
-- 新增类型时遵循第 5 节的约束:只新增 id,并保证线型组合不与已有类型重复(有单元测试检查)。
+- **Protocol field** (HTTP, gRPC, AMQP, Kafka…): like the box's "technology" field, with a list per type and logos. Not in the first phase.
+- New types follow the constraints in section 5: only new ids, and a line style combination no other type uses (checked by a unit test).
 
-## 8. 明确不做
+## 8. Explicitly not doing
 
-- 用户自定义连线类型
-- 根据框类型限制或自动推断连线类型
-- 用颜色区分连线类型
+- User-defined connection types
+- Restricting or inferring connection types from box types
+- Telling connection types apart by colour
 
-## 9. 验收标准
+## 9. Acceptance criteria
 
-1. 新建连线默认为"通用连线",外观与引入类型之前相同;侧边栏可切换到清单中的任一类型,画布上的线型和两端标记即时变化。
-2. 类型选择器按类别分组,带图标和线型示例,支持按名称搜索。
-3. 保存再打开文件后,所有连线的类型保持不变(后端存取同样保持,由后端测试覆盖)。
-4. 旧文件(版本 1–3,连线没有 `typeId`)能正常打开,所有连线显示为通用连线。
-5. 手动把文件里某条连线的 `typeId` 改成不存在的值:打开不报错,按通用连线绘制,选择器标出原始值;再保存后该 `typeId` 仍原样保留。
-6. 更改类型后,已填的标签不丢失。
-7. 类型切换可以撤销和重做。
-8. 每种类型的线型组合互不相同(不依赖颜色);提升显示和画到外部框的连线保持各自线型。
-9. 有类型但没有标签的连线,在画布上显示类型图标和动词;有标签时显示图标和标签。
+1. New connections are plain "Connection"s and look as they did before types existed; the sidebar can switch to any type in the list, and the line style and end markers change on the canvas at once.
+2. The type picker is grouped by category, with icons and line samples, and is searchable by name.
+3. After saving and reopening a file, every connection keeps its type (the backend keeps them too, covered by backend tests).
+4. Old files (versions 1–3, connections without `typeId`) open normally, with every connection plain.
+5. Hand-edit a connection's `typeId` in a file to a value that doesn't exist: it opens without errors, is drawn as a plain connection, and the picker shows the stored value; saving again keeps that `typeId` exactly.
+6. Changing the type doesn't lose the label.
+7. Type changes can be undone and redone.
+8. Every type's line style combination is different (without relying on colour); lifted connections and connections to external boxes keep their own line styles.
+9. A typed connection without a label shows the type's icon and verb on the canvas; with a label, the icon and the label.

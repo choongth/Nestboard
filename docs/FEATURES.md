@@ -1,212 +1,214 @@
-# 功能
+# Features
 
-按区域列出 Nestboard 已有的功能;各版本的进度见[路线图](./ROADMAP.md)。
+**English** | [简体中文](./FEATURES.zh-CN.md)
 
-## 编辑器
+What Nestboard can do today, by area; for progress by version, see the [Roadmap](./ROADMAP.md).
 
-### 画布
+## Editor
 
-- 在空白画布上按住鼠标左键拖动,平移画布
-- 滚轮缩放当前层级
-- 每一层画布无限延展,没有固定边界:子框拖到哪里,可用范围就延伸到哪里
-- 右键点击空白画布 → **新建框**(出现在光标位置)
-- 右键点击框 → **Cut**、**Copy**、**Duplicate**、**Delete**:框已在选择中时作用于整个选择,否则先只选中这个框;删除规则与 `Delete` 键相同。外部框和连线没有右键菜单
-- 左键单击画布空白处:关闭侧边栏,并取消选中
-- 按住 `Shift` 在空白画布上拖动,画出选择框:碰到的框都会被选中(普通拖动仍然是平移)
+### Canvas
 
-### 导航
+- Hold the left mouse button and drag on an empty part of the canvas to pan
+- Scroll the mouse wheel to zoom the current level
+- Every level's canvas extends without limit: wherever you drag a box, the usable area grows to include it
+- Right-click an empty part of the canvas → **New box** (appears at the pointer)
+- Right-click a box → **Cut**, **Copy**, **Duplicate**, **Delete**: when the box is part of the selection they act on the whole selection, otherwise the box alone is selected first; deleting follows the same rules as the `Delete` key. External boxes and connections have no right-click menu
+- Left-click an empty part of the canvas to close the sidebar and clear the selection
+- Hold `Shift` and drag on an empty part of the canvas to draw a selection rectangle: every box it touches is selected (a plain drag still pans)
 
-- 面包屑显示当前路径,点击任意一段可直接跳转到对应层级
-- 按 `Esc` 取消选中;没有选中任何东西时,按 `Esc` 返回上一层
+### Navigation
 
-### 框
+- The breadcrumb shows the current path; click any part of it to jump straight to that level
+- `Esc` clears the selection; with nothing selected, `Esc` goes back up a level
 
-- 所有框尺寸固定,暂不支持调整大小
-- 拖动移动;拖动未选中的框只移动它自己,不会选中它
-- 对齐辅助线:拖动时,框的左右边缘、中线、上下边缘靠近同一层级其他框的对应线(6 个屏幕像素以内)会自动吸附对齐,并显示一条辅助线;两个框中线对齐时只显示中线。拖动多个框时按它们整体的外框对齐。按住 `Alt` 拖动可关闭吸附
-- 等间距辅助:拖动时,如果框与同一行(或同一列)相邻框的间距接近该行中另外两个框之间的间距,或者框接近两个相邻框的正中间,会自动吸附,并用粉色标记标出所有相等的间距。与对齐吸附同时可用时,取距离更近的一个
-- 单击框,打开侧边栏(名称、类型、技术、描述);**标题只能在侧边栏中编辑**
-- 双击框,放大进入(带一个短过渡动画);进入后视野自动适配,刚好框住该层所有子框,没有子框时使用默认视野
-- 在框内部双击背景,退回上一层(同样带过渡动画)
-- 删除框(同时删除其所有后代和相关连线,删除前需确认)
-- 包含子节点的框会显示子节点数量标记
-- 选中的框显示白色边框
+### Boxes
 
-### 框的类型
+- All boxes have the same fixed size; resizing isn't supported yet
+- Drag to move; dragging a box that isn't selected moves only that box and doesn't select it
+- Alignment guides: while dragging, a box's left and right edges, centre lines, and top and bottom edges snap to the matching lines of other boxes on the level when within 6 screen pixels, and a guide line is shown; when two boxes' centres line up, only the centre line is shown. Several boxes dragged together align by their combined outline. Hold `Alt` while dragging to turn snapping off
+- Equal spacing: while dragging, if a box's gap to its neighbour in the same row (or column) is close to the gap between two other boxes in that row, or the box is close to the exact middle between two neighbours, it snaps there and pink marks show every equal gap. When an alignment snap is also possible, the nearer one wins
+- Click a box to open the sidebar (name, type, technology, description); **the title can only be edited in the sidebar**
+- Double-click a box to zoom into it (with a short transition); once inside, the view fits all the boxes on that level, or uses the default view when there are none
+- Inside a box, double-click the background to go back up a level (with the same transition)
+- Delete a box (this deletes everything nested in it and its connections; asks first)
+- A box with boxes inside shows how many
+- A selected box has a white border
 
-详见[框类型设计规格](./box-type-specs.md)。
+### Box types
 
-- 39 种内置类型,分为 10 个类别;新建框默认为"通用框"
-- 侧边栏的类型选择器按类别分组,带图标,可按名称或类别搜索
-- 框上:类型图标和标签位于上边框,技术标志位于左上角,标题居中
-- "分组"为虚线半透明边框,"备注"为便签样式;不认识的类型按通用框显示并标出原始 id
-- 有技术清单的类型只能从清单中选择技术(带标志的下拉列表,共四百多种技术);其他类型可自由输入。标志的来源和没有标志的技术见[技术的标志](./technology-logos.md)
-- 已选中的技术按一次 Backspace 即可清除;更改类型会清空技术(可一次撤销)
-- 类型切换计入撤销历史
+See the [box type spec](./box-type-specs.md).
 
-### 多选
+- 39 built-in types in 10 categories; new boxes are **Generic**
+- The type picker in the sidebar is grouped by category, with icons, and searches by name or category
+- On the box: the type's icon and label sit on the top border, the technology's logo at the top left, the title in the middle
+- **Group / Boundary** has a dashed, see-through border, **Note** looks like a sticky note; an unknown type is drawn as Generic and shows its stored id
+- Types with a technology list only allow technologies from that list (a dropdown with logos, over 400 technologies in all); other types take any text. Where the logos come from, and which technologies have none: [Technology logos](./technology-logos.md)
+- One Backspace clears a chosen technology; changing the type clears the technology (one undo brings both back)
+- Type changes are part of the undo history
 
-- `Shift` + 单击(或 `Ctrl` + 单击)把框加入选择或移出选择;不加修饰键单击则只选中这一个框
-- `Ctrl+A` 选中当前层级的所有框
-- 拖动任一选中的框,所有选中的框一起移动,计为一步撤销
-- 选中多个框时,侧边栏列出它们(点击某一项只选中它),并可一起删除
-- 只能多选同一层级的框;连线和外部框只能单独选中
-- 选中多个框时,侧边栏的 **Arrange** 一栏可以一键排列:左对齐、水平居中对齐、右对齐、顶部对齐、垂直居中对齐、底部对齐(以所选框整体的外框为准);以及水平 / 垂直等距分布(至少 3 个框,最外侧的两个框不动)。每次操作计为一步撤销
-- 按 `Delete` / `Backspace` 删除选中的框或连线:删除多个框、或里面还有框的框时先确认;单个空框或单条连线直接删除(可撤销)。在输入框中这两个键照常编辑文字
+### Multi-select
 
-### 复制粘贴
+- `Shift` + click (or `Ctrl` + click) adds a box to the selection or removes it; a click without a modifier selects only that box
+- `Ctrl+A` selects every box on the current level
+- Drag any selected box to move all of them together, as one undo step
+- With several boxes selected, the sidebar lists them (click one to select only it) and can delete them together
+- Only boxes on the same level can be selected together; connections and external boxes are selected one at a time
+- With several boxes selected, the sidebar's **Arrange** section lines them up in one click: align left, centre horizontally, align right, align top, centre vertically, align bottom (against the selection's combined outline); and distribute horizontally / vertically (at least 3 boxes; the two outermost stay put). Each is one undo step
+- `Delete` / `Backspace` deletes the selected boxes or connection: deleting several boxes, or a box with boxes inside, asks first; a single empty box or a single connection goes straight away (and can be undone). In text fields these keys edit text as usual
 
-- `Ctrl+C` 复制选中的框,`Ctrl+X` 剪切,`Ctrl+V` 粘贴,`Ctrl+D` 在原处旁边复制一份(不影响剪贴板)。剪切的框(或其中的框)有负责人或单独的授权时先确认:框已复制,但粘贴出的新框不带这些授权
-- 复制的内容包括框里面所有层级的框,以及两端都在复制范围内的连线(含跨层级连线);连到复制范围之外的连线不会被复制
-- 粘贴到当前层级:鼠标在画布上时,以鼠标位置为中心;否则放在原位置旁边。在同一位置重复粘贴,每次错开 24px
-- 可以粘贴到其他层级(进入另一个框后粘贴),也可以粘贴到另一个标签页或另一个图表中;所有框和连线都会获得新的 id
-- 右键点击空白画布 → **Paste**:把本标签页最近复制的框粘贴到右键的位置
-- 粘贴计为一步撤销,粘贴后选中新粘贴的框
-- 输入框中的复制粘贴照常处理文字;剪贴板里不是 Nestboard 的框时,在画布上粘贴不会有任何变化
+### Copy and paste
 
-### 连线
+- `Ctrl+C` copies the selected boxes, `Ctrl+X` cuts, `Ctrl+V` pastes, `Ctrl+D` duplicates next to the original (without touching the clipboard). Cutting boxes that have (or contain boxes that have) owners or grants of their own asks first: the boxes are copied, but the pasted boxes don't carry those grants
+- A copy includes every level of boxes inside, and the connections with both ends in what was copied (cross-level ones included); connections to anything outside it are left out
+- Paste onto the current level: centred on the pointer when it's over the canvas, otherwise next to the original position. Pasting again at the same place offsets each copy by 24 px
+- You can paste onto another level (go into another box, then paste), into another tab or into another diagram; every box and connection gets a new id
+- Right-click an empty part of the canvas → **Paste**: pastes the boxes last copied in this tab where you right-clicked
+- A paste is one undo step and selects what was pasted
+- Copy and paste in text fields work on text as usual; pasting something that isn't Nestboard boxes onto the canvas does nothing
 
-- 鼠标悬停在框上时,四边中点出现连接点;从任一连接点拖到另一个框(连接点或框身)上松开即可连线
-- 如果目标框里面还有框,松开时会弹出"Connect to…"列表:先列出这个框本身和它里面的框,一次一层;点右侧箭头(或按 →)打开一个框,看它里面的框,可以一直往下;上方的路径可以点回上一层(也可以按 ← 或 Backspace)。按 ↑ / ↓ 在列表中移动,按 Enter 连到高亮的框,按 Esc 关闭列表不连线。输入文字会搜索所有层级(带相对路径)。目标框里面没有框时直接连线
-- 拖到空白画布上松开不会连线
-- 跨层级连线:一个框不能连到自己,也不能连到嵌套在它里面的框(或包含它的框)
-- 在上层画布上,跨层级连线会"提升"显示在包含两端的框之间,颜色较淡;两端都在同一个框内的连线在上层不显示
-- 同一对框之间的多条连线会并排显示,不会重叠
-- 选中提升显示的连线时,侧边栏显示它真实的两端及路径;如果连线不在当前层级显示,会说明它显示在哪一层
-- 进入一个框后,离开当前层级的连线会画到"外部框"上:外部框就是连线另一端的那个框本身(而不是包含它的上层框),半透明、虚线边框,下方标出它的路径(如"Finance › Ledger";顶层的框显示为"Root › Users")
-- 在框里面拖动连线时,只会出现一个"External box…"框,排在连线拉出的那一侧(从左侧连接点拉出就排在左边,从上方拉出就排在上方,以此类推),必要时画布会自动平移让它可见;已有连线的外部框始终留在原处,不会跟着移动。连线拖到它上面松开,会弹出"Connect to…"列表,从顶层开始列出其他层级的框(当前所在的框和它里面的框不列出;包含当前层级的上层框可以打开,但不能连)。选中的框就出现在"External box…"原来的位置,连线和位置是同一步撤销
-- 只有能编辑当前这一层的人,拖动连线时才会出现"External box…":只负责 Shop 里的 Cart 的人,不能把 Cart 连到 Shop 外面
-- 有连线的外部框可以拖到任何位置,位置随图表保存(可以撤销,PDF 导出中也一样);在别的层级画的连线,另一端的外部框(还没有放过位置的)排在画布右侧。能编辑这个框的人才能移动它里面的外部框
-- "Connect to…"列表同样出现在连线拉出的那一侧(屏幕空间不够时会自动换到另一侧)
-- 连线拖到外部框上,同样遵循"里面有框则弹出列表、否则直接连线";从列表里选中它里面的框时,新的外部框出现在松开鼠标的位置
-- 单击外部框可在侧边栏查看,双击会跳到它所在的层级并选中它
-- 线型按连线类型区分(见下方“连线的类型”);通用连线为带流动动画的虚线加箭头;连线自动连接两个框相对的一侧,移动框时自动改道
-- 每条连线可添加文字标签;单击连线或标签选中,在侧边栏编辑或删除
+### Connections
 
-### 连线的类型
+- Hovering a box shows connection points at the middle of each side; drag from any of them onto another box (a point or anywhere on it) and let go to connect
+- If the target box has boxes inside, letting go opens a "Connect to…" list: first the box itself and the boxes inside it, one level at a time; click the arrow on the right (or press →) to open a box and see the boxes inside it, as deep as you like; the path at the top goes back up a level (as do ← and Backspace). ↑ / ↓ move through the list, Enter connects to the highlighted box, Esc closes the list without connecting. Typing searches every level (showing relative paths). If the target box has nothing inside, it connects straight away
+- Letting go over an empty part of the canvas doesn't connect
+- Cross-level connections: a box can't connect to itself, nor to a box nested inside it (or one that contains it)
+- On a level above, a cross-level connection is "lifted" and drawn, fainter, between the boxes that contain its ends; connections with both ends inside the same box aren't shown on the level above
+- Several connections between the same pair of boxes are drawn side by side, not on top of each other
+- Selecting a lifted connection shows its real ends and their paths in the sidebar; if the connection isn't drawn on the current level, the sidebar says which level it's drawn on
+- Inside a box, connections that leave the level end on "external boxes": an external box is the box at the other end itself (not the box above that contains it), see-through with a dashed border, with its path written underneath (e.g. "Finance › Ledger"; a top-level box shows as "Root › Users")
+- While you drag a connection inside a box, a single "External box…" box appears on the side the line is pulled from (pulled from the left point it sits on the left, from the top point above, and so on), and the canvas pans to show it if needed; external boxes that already have connections stay where they are. Letting go on it opens the "Connect to…" list, starting from the top level and listing boxes on other levels (the box you're in and the boxes inside it aren't listed; the boxes above that contain the current level can be opened but not connected to). The chosen box appears where "External box…" was; the connection and the position are one undo step
+- "External box…" only appears for people who can edit the current level: someone who owns only Cart inside Shop can't connect Cart to anything outside Shop
+- External boxes with connections can be dragged anywhere; the position is saved with the diagram (undoable, and used in the PDF export too). For connections drawn on other levels, the external boxes at their far ends (ones never placed) line up on the right of the canvas. Only people who can edit a box can move the external boxes inside it
+- The "Connect to…" list also appears on the side the line is pulled from (switching to the other side when there isn't room on screen)
+- Dropping a connection on an external box follows the same rule: a list if it has boxes inside, otherwise it connects straight away; picking a box inside it from the list puts the new external box where you let go
+- Click an external box to see it in the sidebar; double-click it to jump to its level with it selected
+- The line style depends on the connection type (see "Connection types" below); a plain connection is an animated dashed line with an arrow; connections attach to the facing sides of their two boxes and re-route when a box moves
+- Each connection can have a text label; click the connection or its label to select it, then edit or delete it in the sidebar
 
-详见[连线类型设计规格](./edge-type-specs.md)。
+### Connection types
 
-- 10 种内置类型,分为 3 类:通用(通用连线)、通信(调用、发送消息 / 事件、发布、消费、实时推送)、数据(读取、写入、读写、复制)
-- 每种类型有独立的线型:实线 / 虚线 / 长虚线 / 点线 / 双线,是否流动,以及两端的实心箭头、空心箭头或圆点;不依赖颜色区分
-- 新建连线默认为"通用连线",外观与以前相同
-- 选中连线后,侧边栏的类型选择器按类别分组,带图标、搜索和线型示例
-- 有类型的连线在标签前显示类型图标;没写标签时显示该类型的动词(如"Calls"、"Reads from")
-- 提升显示和画到外部框的连线保持各自线型;更改类型不影响标签,并计入撤销历史
+See the [connection type spec](./edge-type-specs.md).
 
-### 撤销与重做
+- 10 built-in types in 3 categories: General (Connection), Communication (Calls, Sends message / event, Publishes to, Consumes from, Streams to) and Data (Reads from, Writes to, Reads & writes, Replicates to)
+- Each type has its own line style: solid / dashed / long-dashed / dotted / double, flowing or not, and filled arrows, open arrows or dots at the ends; colour isn't needed to tell them apart
+- New connections are plain **Connection**s and look as before
+- With a connection selected, the type picker in the sidebar is grouped by category, with icons, search and line samples
+- A typed connection shows the type's icon before its label; without a label it shows the type's verb (such as "Calls" or "Reads from")
+- Lifted connections and connections to external boxes keep their line styles; changing the type leaves the label alone and is part of the undo history
 
-- `Ctrl+Z` 撤销,`Ctrl+Y` / `Ctrl+Shift+Z` 重做,顶栏也有撤销/重做按钮(导航操作不计入撤销历史)。撤销只撤销你自己的改动:别人同时做的改动保留
-- 撤销/重做会自动跳到发生改动的层级,并短暂高亮改动的框或连线
+### Undo and redo
 
-### 帮助
+- `Ctrl+Z` undoes, `Ctrl+Y` / `Ctrl+Shift+Z` redoes; the top bar has undo/redo buttons too (moving between levels isn't part of the undo history). Undo only undoes your own changes: changes others made at the same time stay
+- Undo/redo jumps to the level where the change happened and briefly highlights the boxes or connections it changed
 
-- 文件菜单中的 **Help**(位于 Delete diagram 上方,所有人可见),或在画布上按 `?` 打开;在输入框中输入 `?` 不会打开
-- Shortcuts 标签:按"移动、选择、编辑、连线、图表"分组列出所有快捷键和鼠标操作;Mac 上显示 ⌘ / ⇧
-- Getting started 标签:五张卡片,介绍框即画布、新建与连线、类型与技术、跨层级连线、多人协作
-- 只能查看的人(Viewer)会看到说明,需要编辑权限的项目标为"Editors only"
-- 快捷键清单只写在 `frontend/src/components/helpContent.ts`;快捷键有变化时,要同时更新它
+### Help
 
-## 保存、文件与导出
+- **Help** in the File menu (just above Delete diagram…, shown to everyone), or press `?` on the canvas; typing `?` into a text field doesn't open it
+- Shortcuts tab: every shortcut and mouse action, grouped into Moving around, Selecting, Editing, Connecting and Diagram; Macs show ⌘ / ⇧
+- Getting started tab: five cards: every box is a canvas, adding boxes and connecting them, types and technologies, connections across levels, working together
+- People who can only look (Viewers) see a note, and items that need edit rights are marked "Editors only"
+- The shortcut list lives only in `frontend/src/components/helpContent.ts`: when a shortcut changes, update it there too
 
-### 自动保存与多人同时编辑
+## Saving, files and export
 
-图表保存在服务器上,见[后端说明](../server/README.md)的"实时连接"。
+### Saving as you go, and editing together
 
-- 不需要保存:每个改动做出后很快(约四分之一秒)就送到服务器,打字时边打边送。新建的图表在第一个改动时创建到服务器上(之后网址带上它的 id)
-- 同时打开同一张图表的人,会立刻看到彼此的改动:改名、移动、新建、删除。同一个框,别人改位置、你改名称,两个改动都保留;改同一个字段,后到服务器的生效
-- 别人删除了你正在看的那一层,会回到还在的最近一层;你在改的东西被别人删除了,你的这个改动会被跳过,底部说明原因
-- 断线时文件菜单旁显示离线图标,标签页标题前加 "●";改动先留在本地,重新连上后自动送出,并显示断线期间别人的改动
-- 新建、打开其他图表、离开项目或退出登录时,会先等还在路上的改动送到(连着线时最多等十秒,服务器忙时也够);只有改动送不到(通常是断线)才会先确认。关闭标签页时若还有没送到的改动会提示
-- 改动送出超过一秒还没确认时,文件菜单旁显示转动的图标。`Ctrl+S` 会立刻送出,但平时不需要按
-- 别人改了你的权限(在框上授权、取消授权、组或组织的变动),锁和负责人马上更新,不用刷新;别人改了图表名称,文件菜单和标签页标题马上显示新名称
-- 图表被别人删除、或你失去了看它的权限时,会说明原因,然后换成空白图表
-- 顶栏右侧是同时打开这张图表的其他人:每人一个圆形头像(名字缩写),一人一种颜色;同一个人开了几个标签页也只显示一个,你自己不显示。悬停说明他在哪一层,点击跳到那一层
-- 在同一层的人:他们选中的框(或正在拖动的框)显示他们颜色的边框和名字;他们的指针带着名字显示在画布上;他们拖动框时,你看到框跟着移动,松开后落在新位置。这些只是转告,不保存
+Diagrams are stored on the server; see "实时连接" (live connection) in the [backend notes](../server/README.md).
 
-### 打开与文件
+- No need to save: every change reaches the server shortly after you make it (about a quarter of a second), and typing is sent as you type. A new diagram is created on the server at its first change (after which the address includes its id)
+- People with the same diagram open see each other's changes at once: renames, moves, new boxes, deletions. If someone moves a box while you rename it, both changes are kept; for changes to the same field, the one that reaches the server last wins
+- If someone deletes the level you're looking at, you go to the nearest level that still exists; if something you're changing is deleted by someone else, your change is skipped and a note at the bottom says why
+- When the connection drops, an offline icon appears next to the File menu and the tab title gets a "●"; changes wait in the browser, are sent automatically once you're back online, and others' changes from the meantime are shown
+- Creating or opening another diagram, leaving the project or signing out first waits for changes still on their way (up to ten seconds while connected, enough even when the server is busy); only when they can't be sent (usually because the connection dropped) does it ask first. Closing the tab with unsent changes warns you
+- When a change has been on its way for more than a second, a spinning icon appears next to the File menu. `Ctrl+S` sends changes at once, but you normally don't need it
+- When someone changes your permissions (granting or removing access on a box, changes to groups or the organization), locks and owners update at once, without reloading; when someone renames the diagram, the File menu and the tab title show the new name at once
+- When the diagram is deleted by someone else, or you lose access to it, a note says why and it's replaced by a blank diagram
+- On the right of the top bar are the other people who have this diagram open: one round avatar each (their initials), each in their own colour; someone with several tabs open still shows once, and you don't see yourself. Hovering says which level they're on; clicking takes you there
+- For people on the same level: the boxes they've selected (or are dragging) show a border in their colour with their name; their pointers are shown on the canvas with their names; when they drag a box you see it move, landing where they let go. These are only relayed, never saved
 
-- `Ctrl+O` 打开当前项目中的图表(按最近修改排序,可搜索);文件菜单中还可新建、重命名;项目 Owner 可以**删除图表**(项目的 ADR 保留,关于其中框的 ADR 显示为已删除)
-- 网址带有图表 id(如 `…/editor?diagram=…`):刷新页面、复制链接、前进 / 后退都会打开对应的图表
-- 服务器无法连接、或链接指向已删除的图表时,会给出说明,不会丢失正在编辑的内容
-- 文件菜单中的**从文件导入** / **导出到文件**:读写本地 JSON 文件。导入的图表马上作为新图表存到服务器上
-- Chromium 浏览器用系统的文件对话框;Firefox / Safari 改为下载文件、用文件选择器导入
+### Opening and files
 
-### 导出为 PDF
+- `Ctrl+O` opens a diagram in the current project (most recently changed first, searchable); the File menu can also create and rename diagrams; project Owners can **delete a diagram** (the project's ADRs stay; ADRs about its boxes show them as deleted)
+- The address includes the diagram id (like `…/editor?diagram=…`): reloading, copying the link, back and forward all open that diagram
+- When the server can't be reached, or a link points to a deleted diagram, a note explains it, and nothing you're editing is lost
+- **Import from file…** / **Export to file…** in the File menu read and write local JSON files. An imported diagram is stored on the server as a new diagram straight away
+- Chromium browsers use the system's file dialogs; Firefox / Safari download the file instead, and import through a file picker
 
-文件菜单中的 **Export as PDF…**;项目中的每个人都可以,包括 Viewer。
+### Export as PDF
 
-- 像一份报告:封面(项目、图表名、导出日期,不写导出人)、目录页(Table of Contents),然后每一层一页
-- 页面顺序是深度优先:根层之后,先排完一个框里面的所有层,再到下一个框;同一层的框按画布上从上到下、从左到右的顺序。标题按层级变小,PDF 的书签也按层嵌套;每张图有编号(Diagram 1、Diagram 2……)
-- 图按编辑器里的样子画:框的类型、技术图标、连线样式、跨层连线和外部框;框名和连线文字可以在 PDF 中搜索、复制
-- 在一个框里面时,可以选择只导出这个框的内部;纸张可选 A4 或 US Letter;太宽的图会用横向页面
-- PDF 由服务器根据它保存的图表生成,所以会先等还在路上的改动送到(还不在服务器上的新图表先存过去)
+**Export as PDF…** in the File menu; available to everyone in the project, Viewers included.
 
-## 账号、项目与权限
+- Laid out like a report: a cover page (project, diagram name, export date, without the exporter's name), a table of contents, then one page per level
+- Pages go depth first: after the root level, every level inside one box comes before the next box; boxes on the same level go top to bottom, left to right, as on the canvas. Headings get smaller by level, PDF bookmarks are nested by level too, and every diagram is numbered (Diagram 1, Diagram 2…)
+- Drawn the way the editor draws: box types, technology icons, connection styles, cross-level connections and external boxes; box names and connection text can be searched and copied in the PDF
+- When inside a box, you can choose to export only the inside of that box; paper is A4 or US Letter; diagrams that are too wide get landscape pages
+- The server makes the PDF from the diagram it has stored, so it first waits for changes still on their way (a new diagram not yet on the server is stored first)
 
-### 顶栏与页面
+## Accounts, projects and permissions
 
-- 顶栏左侧从大到小:**Nestboard** 菜单 / 组织 / 项目 / 页面。页面菜单(在项目之后):编辑器(`…/editor`)、决策(`…/decisions`,即 ADR)、People(`…/people`,谁负责什么)。每个页面有自己的网址,浏览器的前进 / 后退可用;切换页面不会关闭正在编辑的图表
-- 页面都在项目之内,网址形如 `/organizations/<组织 id>/projects/<项目 id>/editor`(用 id,网址不透露名称);顶栏显示完整的"组织 / 项目"名称,点击切换项目(有未保存的改动时先确认)
-- 右上角的账号菜单:显示当前用户,可以退出登录(退出后再登录会回到原来的页面)
+### Top bar and pages
 
-### 账号与组织
+- The left of the top bar goes from big to small: the **Nestboard** menu / organization / project / page. The page menu (after the project): Editor (`…/editor`), Decisions (`…/decisions`, the ADRs), People (`…/people`, who owns what). Every page has its own address, and the browser's back / forward work; switching pages doesn't close the diagram being edited
+- All pages are inside a project, at addresses like `/organizations/<organization id>/projects/<project id>/editor` (ids, so the address doesn't reveal names); the top bar shows the full "organization / project" name, and clicking it switches projects (asking first when there are unsaved changes)
+- The account menu at the top right shows who's signed in and signs out (signing back in returns you to the same page)
 
-见[组织、项目与权限设计规格](./access-design.md)。
+### Accounts and organizations
 
-- 必须登录才能使用。全新的 Nestboard 第一次打开时创建第一个账号(实例管理员);之后只能通过组织的邀请链接(`/invite/…`)注册或加入
-- 登录页:邮箱和密码;密码错误会提示,连续输错要等待。忘记密码时,由实例管理员生成重置链接(`/reset-password/…`)
-- **组织页面**(`/organizations`,打开 Nestboard 时的首页):左侧边栏是你所在的组织,可搜索;实例管理员可以 **New organization**。选择一个组织后(`/organizations/<组织 id>`),右侧上方是四个标签:**Invitations**(仅 Admin)、**Members**、**Groups**、**Projects**,默认是 Projects;网址的 `#members`、`#groups`、`#invitations` 选择标签。没有选择组织时提示先选择一个
-  - Projects:搜索项目、**New project**(有权限时,创建者成为 Owner),以及每个项目的卡片;Org Admin 也能看到没有权限的项目(标为 No access),并可以**接管**(成为 Owner,记入项目的活动记录)
-  - Members:职位、角色、"可以创建项目"开关、移除或退出
-  - Invitations:生成邀请链接(可指定角色、职位、限定邮箱)并复制发送,可撤销。**What can each role do?** 按钮列出 Owner / Admin / Member 各能做什么,方便选择角色。通过邀请加入后直接打开该组织
-  - Groups:左边是组的树(每个组的人数),右边是选中的组:它在哪一层、组里的人和组长、下层组;组长和 Admin 可以加人、移出、设为组长,新建下层组、改名、**移动**(到另一个组下面或顶层,下层组跟着移动)、删除
-- 只属于一个组织时,打开 Nestboard 直接进入这个组织
-- 点 **Nestboard** 打开菜单:**All organizations**,以及你所在的每个组织。点项目名称可以切换到组织中的其他项目;项目 Owner 还可以在这里**重命名**或**删除项目**。离开项目时,还有改动没能送到服务器(断线)会先确认
-- 组织 Owner 在组织页面左侧选中的组织旁点 **⋯**,可以**重命名**或**删除组织**。删除项目或组织需要输入它的名称确认,里面的一切都会删除
-- 实例管理员在账号菜单中打开 **Accounts and reset links**(`/admin`):列出全部账号,为某个账号生成一次性的重置密码链接
+See the [organizations, projects and permissions spec](./access-design.md).
 
-### 权限与负责人
+- You have to sign in. A brand-new Nestboard creates the first account (the instance admin) the first time it's opened; after that, people can only sign up or join through an organization's invitation link (`/invite/…`)
+- Sign-in page: email and password; a wrong password says so, and repeated wrong attempts have to wait. For a forgotten password, the instance admin makes a reset link (`/reset-password/…`)
+- **Organizations page** (`/organizations`, the home page when you open Nestboard): the left sidebar lists your organizations and is searchable; the instance admin can create a **New organization**. With an organization chosen (`/organizations/<organization id>`), four tabs sit at the top right: **Invitations** (Admins only), **Members**, **Groups** and **Projects**, with Projects first; `#members`, `#groups` and `#invitations` in the address choose a tab. With no organization chosen, it asks you to pick one first
+  - Projects: search projects, **New project** (when allowed; the creator becomes its Owner), and a card for each project; Org Admins also see projects they have no access to (marked No access) and can **Take over** (becoming Owner, which is recorded in the project's activity)
+  - Members: job titles, roles, the switch that lets a member create projects, removing members or leaving
+  - Invitations: make an invitation link (with a role, a job title, and optionally a fixed email address), copy it and send it; links can be revoked. The **What can each role do?** button lists what Owners, Admins and Members can each do, to help choose a role. Joining through an invitation opens that organization
+  - Groups: the group tree on the left (with each group's head count), the chosen group on the right: where it sits, its people and leads, and the groups under it; leads and Admins can add and remove people, make leads, create groups under it, rename it, **move** it (under another group or to the top level, taking the groups under it along) and delete it
+- With only one organization, opening Nestboard goes straight into it
+- Click **Nestboard** to open a menu: **All organizations** and each organization you're in. Click the project name to switch to another project in the organization; project Owners can also **rename** or **delete the project** there. Leaving a project while changes couldn't reach the server (offline) asks first
+- Organization Owners click **⋯** next to the chosen organization on the left of the organizations page to **rename** or **delete the organization**. Deleting a project or an organization asks you to type its name, and deletes everything in it
+- The instance admin opens **Accounts and reset links** (`/admin`) from the account menu: it lists every account and makes one-time password reset links
 
-以下都在一个项目之内。
+### Permissions and owners
 
-- **People** 页面(`…/people`):三栏占满整个页面,各自滚动。左栏是整个项目的授权;中栏是框上的授权,按图表和框的层级排列,一眼看出谁负责什么;右栏是活动记录(谁把谁设为负责人、谁接管了项目等)。Owner 可以在这里授权、改角色、取消
-- 编辑器里,框上的 Owner 显示为**负责人**(框右下角的名字)。你不能改的框显示锁的图标;框所在的画布你不能改时,框不能拖动,右键菜单不提供新建框
-- 不能做的改动不会生效,底部说明原因(如"You can't delete "Orders"");服务器仍会再检查一次,它拒绝的改动会撤回并说明原因
-- 选中框时,侧边栏的 **Access** 一栏列出负责人、Editor、Viewer 和来自上层框的授权;你是这个框(或上层)的 Owner 时可以授权、改角色、取消。不能改的框和连线在侧边栏只读显示
-- Viewer 看不到新建、重命名、导入等菜单项;只有框上授权的人可以改他们负责的部分,但不能新建图表
-- 图表属于项目:打开、新建都在当前项目内;进入另一个项目时从空白图表开始
+Everything here is within one project.
 
-## 决策页面
+- **People** page (`…/people`): three columns filling the page, each scrolling on its own. Left: grants on the whole project; middle: grants on boxes, arranged by diagram and box level, so you can see at a glance who owns what; right: the activity log (who made whom an owner, who took over the project, and so on). Owners can grant, change roles and remove access here
+- In the editor, a box's Owner is shown as its **owner** (the name at the box's bottom right). Boxes you can't change show a lock; on a canvas you can't change, boxes can't be dragged and the right-click menu offers no New box
+- Changes you aren't allowed to make don't happen, and a note at the bottom says why (such as "You can't delete "Orders""); the server checks again, and any change it refuses is rolled back with the reason
+- With a box selected, the sidebar's **Access** section lists its owner, Editors, Viewers and grants inherited from boxes above; if you're an Owner of the box (or of one above it), you can grant access, change roles and remove access. Boxes and connections you can't change are shown read-only in the sidebar
+- Viewers don't see menu items such as new, rename and import; people with grants on boxes can change what they own, but can't create diagrams
+- Diagrams belong to a project: opening and creating happen in the current project; entering another project starts with a blank diagram
 
-架构决策记录 ADR,Nygard 格式;属于当前项目,在项目内编号。打开决策页面不需要先保存图表。
+## Decisions page
 
-### 列表与范围
+Architecture decision records (ADRs) in the Nygard format; they belong to the current project and are numbered within it. Opening the Decisions page doesn't require saving the diagram first.
 
-- 左侧列表按**范围**分组成树:整个项目的在最上面,然后是当前图表中各个框的(按框的层级缩进),再是其他图表的框和已删除的框
-- 新建 ADR 时选择它关于什么(**About**):只列出你能编辑的范围。提议中的 ADR 可以 **Move…** 到另一个范围
-- 按钮跟随你在 ADR 范围上的角色:Editor 能修改、关联、删除;Owner 能接受、否决、废弃、取代;Viewer 只读。关联框时只列出范围内的框和连线
-- 打开决策页面直接显示 ADR:左侧边栏顶部是 **New ADR** 按钮,下面是全部 ADR(编号、标题、状态),可按状态筛选、按标题或编号搜索;右侧显示选中的 ADR(未选择时显示第一条),网址如 `/decisions/7?diagram=…`。右上角只有**导出全部**
+### List and scopes
 
-### 编写 ADR
+- The list on the left is a tree grouped by **scope**: whole-project ADRs at the top, then those about boxes in the current diagram (indented by box level), then boxes in other diagrams and deleted boxes
+- A new ADR asks what it's **About**: only scopes you can edit are listed. A proposed ADR can be moved to another scope with **Move…**
+- The buttons follow your role on the ADR's scope: Editors can edit, link and delete; Owners can accept, reject, deprecate and supersede; Viewers can only read. Linking lists only the boxes and connections within the scope
+- The Decisions page opens straight onto the ADRs: the **New ADR** button at the top of the left sidebar, below it every ADR (number, title, status), filterable by status and searchable by title or number; the chosen ADR on the right (the first one when none is chosen), at an address like `/decisions/7?diagram=…`. The top right holds only **Export all**
 
-- 新建 ADR 后直接进入编辑。每条 ADR 包括:标题;**背景**(一段 Markdown,含表格);**决定**(一条条列出,用 **+ New decision** 添加);**后果**,分为**正面**(在上)和**负面**(在下)两组,各自可添加
-- 编辑列表时:`Enter` 新增下一项,`Shift+Enter` 换行,在空的一项里按 `Backspace` 删除它,空白的项保存时自动去掉;`Ctrl+Enter` 保存。提议中的 ADR 在阅读时也可以直接点 **+ New decision** / **+ Positive** / **+ Negative** 添加
+### Writing an ADR
 
-### 状态与取代
+- A new ADR opens for editing straight away. Each ADR has: a title; **Context** (Markdown, tables included); **Decision** (listed point by point, added with **+ New decision**); and **Consequences**, in two groups, **Positive** (above) and **Negative** (below), each with its own add button
+- In the lists: `Enter` adds the next point, `Shift+Enter` starts a new line, `Backspace` in an empty point deletes it, blank points are dropped on save; `Ctrl+Enter` saves. A proposed ADR can also take new points while you read it, with **+ New decision** / **+ Positive** / **+ Negative**
 
-- 状态:提议中 → 接受 / 否决;已接受 → 废弃。接受或否决前会确认;接受后正文不能再改,要改变决定就"取代"它
-- **取代**:以已接受的决策为底稿新建一条(复制正文和关联);新决策被接受时,旧决策自动变为"已取代"
+### Status and superseding
 
-### 关联、历史与导出
+- Status: proposed → accepted / rejected; accepted → deprecated. Accepting or rejecting asks first; once accepted, the text can't change: to change the decision, supersede it
+- **Supersede**: creates a new ADR from the accepted one (copying its text and links); when the new one is accepted, the old one becomes superseded automatically
 
-- **关联**:选择当前打开的图表中决策涉及的框和连线(关联到项目中其他图表的保留不变);点击关联的框会打开它所在的图表,跳到它所在的层级并选中它。框被删除后,关联仍保留并标为"已删除"
-- **相关决策**:取代、修订、相关;两端都会显示(如"被 ADR-0002 取代")
-- **历史**:每个版本的状态、改动摘要、时间和作者(含职位);标题下方写明谁提议、谁接受或否决;导出的 Markdown 也写明
-- 导出单条决策为 Markdown 文件,或导出全部决策(zip),可直接放进代码仓库的 `docs/adr/`
-- 别人同时修改了同一条决策时,会说明并显示最新版本,不会覆盖对方的改动
-- 正在编辑的 ADR 有未保存的改动时,切换到其他 ADR、切换页面或按浏览器的后退,都会先确认"放弃改动?";关闭或刷新标签页也会提示
+### Links, history and export
 
-## 尚未包含的内容
+- **Links**: pick the boxes and connections in the open diagram that the decision is about (links to the project's other diagrams are kept); clicking a linked box opens its diagram, goes to its level and selects it. When a box is deleted, the link stays, marked as deleted
+- **Related decisions**: supersedes, amends, relates to; shown at both ends (such as "Superseded by ADR-0002")
+- **History**: each version's status, summary of changes, time and author (with job title); below the title it says who proposed it and who accepted or rejected it; exported Markdown says so too
+- Export one decision as a Markdown file, or all of them (zip), ready to drop into a repository's `docs/adr/`
+- When someone else changed the same decision at the same time, a note says so and the latest version is shown, without overwriting their change
+- With unsaved changes to an ADR, switching to another ADR, switching pages or pressing the browser's back button asks first whether to discard them; closing or reloading the tab warns too
 
-**AI 集成** 以及 **MCP**。详见[路线图](./ROADMAP.md)。
+## Not included yet
+
+**AI integration** and **MCP**. See the [Roadmap](./ROADMAP.md).

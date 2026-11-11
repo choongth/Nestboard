@@ -1,25 +1,27 @@
-# 技术的标志
+# Technology logos
 
-框上用标志(logo)表示它的技术。每种框类型可选的技术见 `frontend/src/registry/boxTypes.ts` 的 `TECHNOLOGIES`;每个技术用哪个标志见 `frontend/src/registry/technologyLogos.ts`。
+**English** | [简体中文](./technology-logos.zh-CN.md)
 
-## 标志从哪里来
+A box shows its technology as a logo. The technologies each box type allows are `TECHNOLOGIES` in `frontend/src/registry/boxTypes.ts`; which logo each technology uses is in `frontend/src/registry/technologyLogos.ts`.
 
-1. **Simple Icons**(`simple-icons`,CC0):单色标志,按框的底色调亮品牌色,保证看得清。大多数技术用它。
-2. **SVG Logos**(`@iconify-json/logos`,CC0):全彩标志,用于 Simple Icons 没有的品牌(AWS、Azure、Twilio 等)。只用方形的,横向的文字标志(wordmark)缩小后看不清。有部分颜色太暗、在框上看不清的,会垫一块浅色底。
-3. **借用厂商的标志**:技术本身没有标志时,用它厂商(或所属产品系列)的标志,见下表。
-4. **两个字母**:都没有时,显示技术名称的两个字母,见最后一张表。
+## Where the logos come from
 
-两个库都只在开发时使用:用到的标志由 `logoDrawings.test.ts` 复制到 `logoDrawings.json`,网页第一次画标志时才加载这个文件,所以不会让打开网页变慢;代码里只保留技术名称。
+1. **Simple Icons** (`simple-icons`, CC0): one-colour logos, with the brand colour lightened against the box's background so they stay readable. Most technologies use these.
+2. **SVG Logos** (`@iconify-json/logos`, CC0): full-colour logos, for brands Simple Icons doesn't have (AWS, Azure, Twilio and others). Only square ones are used: a wide wordmark is unreadable at this size. Some that are too dark to see on a box get a light backing.
+3. **The maker's logo**: when a technology has no logo of its own, it uses its maker's (or its product family's), listed below.
+4. **Two letters**: when there's neither, two letters of the technology's name are shown, listed in the last table.
 
-品牌标志归其所有者,只用来标明是哪种技术。PDF 导出用同样的标志(`server/app/pdf_export/visuals.json`)。
+Both sets are used at development time only: the logos in use are copied into `logoDrawings.json` by `logoDrawings.test.ts`, and the page loads that file the first time it draws a logo, so it doesn't slow down opening the page; the code keeps only the technologies' names.
 
-增加技术时:在 `TECHNOLOGIES` 中加入名称;有自己的标志就加到 `technologyLogos.ts`,再重新生成 `logoDrawings.json`(`UPDATE_LOGO_DRAWINGS=1 npx vitest run src/registry/logoDrawings.test.ts`);借用厂商的加到 `MAKER_LOGOS`,没有标志的加到 `NO_LOGO`,并更新本文的表格。测试会检查每个技术都属于其中一种,并且下面两张表与代码一致。
+Brand logos belong to their owners and are used only to identify the technology. The PDF export uses the same logos (`server/app/pdf_export/visuals.json`).
 
-## 借用厂商标志的技术
+To add a technology: add its name to `TECHNOLOGIES`; if it has its own logo, add it to `technologyLogos.ts` and regenerate `logoDrawings.json` (`UPDATE_LOGO_DRAWINGS=1 npx vitest run src/registry/logoDrawings.test.ts`); if it borrows its maker's, add it to `MAKER_LOGOS`; if it has none, add it to `NO_LOGO`; then update the tables in this document (in both languages). The tests check that every technology falls into one of these, and that the two tables below match the code.
 
-这些技术画的是厂商或产品系列的标志,将来可以找更合适的画法。
+## Technologies drawn with their maker's logo
 
-| 技术 | 借用的标志 |
+These are drawn with their maker's or product family's logo; a better drawing can be found for them later.
+
+| Technology | Logo used |
 |---|---|
 | .NET MAUI | .NET |
 | Actix Web | Actix |
@@ -133,95 +135,95 @@
 | Whisper | OpenAI |
 | Zilliz Cloud | Milvus |
 
-## 没有标志的技术
+## Technologies without a logo
 
-这些技术显示两个字母。
+These show two letters.
 
-| 技术 | 原因 |
+| Technology | Why |
 |---|---|
-| ActiveMQ | 两个标志库都没有 |
-| Agno | 两个标志库都没有 |
-| Akeyless | 两个标志库都没有 |
-| Amazon Bedrock | 两个标志库都没有;AWS 的标志只有横向的文字标志 |
-| Amazon Bedrock Agents | 两个标志库都没有;AWS 的标志只有横向的文字标志 |
-| Amazon EMR | 两个标志库都没有;AWS 的标志只有横向的文字标志 |
-| Amazon Nova | 两个标志库都没有;AWS 的标志只有横向的文字标志 |
-| Amazon SageMaker | 两个标志库都没有;AWS 的标志只有横向的文字标志 |
-| Apigee | SVG Logos 只有横向的文字标志 |
-| Arize Phoenix | 两个标志库都没有 |
-| AutoMQ | 两个标志库都没有 |
-| Axiom | 两个标志库都没有 |
-| Axum | 两个标志库都没有 |
-| Beanstalkd | 两个标志库都没有 |
-| BullMQ | 两个标志库都没有 |
-| Conductor | 两个标志库都没有 |
-| Confluent | 两个标志库都没有 |
-| CoreDNS | 两个标志库都没有 |
-| CyberArk Conjur | 两个标志库都没有 |
-| Dagster | 两个标志库都没有 |
-| Debezium | 两个标志库都没有 |
-| Descope | 两个标志库都没有 |
-| DocuSign | 两个标志库都没有 |
-| Dokku | 两个标志库都没有 |
-| Doppler | 两个标志库都没有 |
-| Dragonfly | 两个标志库都没有 |
-| Dremio | 两个标志库都没有 |
-| DSPy | 两个标志库都没有 |
-| Echo | 两个标志库都没有 |
-| Ehcache | 两个标志库都没有 |
-| EMQX | 两个标志库都没有 |
-| Encore | 两个标志库都没有 |
-| Fiber | 两个标志库都没有 |
-| Firebolt | 两个标志库都没有 |
-| Fireworks AI | SVG Logos 只有横向的文字标志 |
-| Fivetran | 两个标志库都没有 |
-| Flowise | 两个标志库都没有 |
-| Gravitee | 两个标志库都没有 |
-| Groq | SVG Logos 只有横向的文字标志 |
-| Hangfire | 两个标志库都没有 |
-| HAProxy | 两个标志库都没有 |
-| Hatchet | 两个标志库都没有 |
-| Hazelcast | 两个标志库都没有 |
-| Helicone | 两个标志库都没有 |
-| Honeycomb | 两个标志库都没有 |
-| IBM MQ | 两个标志库都没有;IBM 的标志只有横向的文字标志 |
-| Infisical | 两个标志库都没有 |
-| Inngest | 两个标志库都没有 |
-| Kestra | 两个标志库都没有 |
-| KrakenD | 两个标志库都没有 |
-| KServe | 两个标志库都没有 |
-| LiteLLM | 两个标志库都没有 |
-| llama.cpp | 两个标志库都没有 |
-| LlamaIndex | 两个标志库都没有 |
-| Manticore Search | 两个标志库都没有 |
-| Mastra | 两个标志库都没有 |
-| Micronaut | 两个标志库都没有 |
-| Momento | 两个标志库都没有 |
-| MotherDuck | 两个标志库都没有 |
-| NS1 | 两个标志库都没有 |
-| Oracle Database | 两个标志库都没有;Oracle 的标志只有横向的文字标志 |
-| ParadeDB | 两个标志库都没有 |
-| Plaid | 两个标志库都没有 |
-| Portkey | 两个标志库都没有 |
-| PowerDNS | 两个标志库都没有 |
-| Quickwit | 两个标志库都没有 |
-| Redpanda | 两个标志库都没有 |
-| Resque | 两个标志库都没有 |
-| Restate | 两个标志库都没有 |
-| RQ | 两个标志库都没有 |
-| SGLang | 两个标志库都没有 |
-| Starburst | 两个标志库都没有 |
-| StarRocks | 两个标志库都没有 |
-| Strands Agents | 两个标志库都没有;AWS 的标志只有横向的文字标志 |
-| Stytch | SVG Logos 只有横向的文字标志 |
-| Tigris | 两个标志库都没有 |
-| Trigger.dev | 两个标志库都没有 |
-| Turbopuffer | 两个标志库都没有 |
-| Tyk | 两个标志库都没有 |
-| Varnish | 两个标志库都没有 |
-| Voyage AI | 两个标志库都没有 |
-| WarpStream | 两个标志库都没有 |
-| Windmill | 两个标志库都没有 |
-| Zabbix | SVG Logos 只有横向的文字标志 |
-| ZeroMQ | 两个标志库都没有 |
-| Zitadel | 两个标志库都没有 |
+| ActiveMQ | in neither logo set |
+| Agno | in neither logo set |
+| Akeyless | in neither logo set |
+| Amazon Bedrock | in neither logo set; AWS's logo is only a wide wordmark |
+| Amazon Bedrock Agents | in neither logo set; AWS's logo is only a wide wordmark |
+| Amazon EMR | in neither logo set; AWS's logo is only a wide wordmark |
+| Amazon Nova | in neither logo set; AWS's logo is only a wide wordmark |
+| Amazon SageMaker | in neither logo set; AWS's logo is only a wide wordmark |
+| Apigee | SVG Logos has only a wide wordmark |
+| Arize Phoenix | in neither logo set |
+| AutoMQ | in neither logo set |
+| Axiom | in neither logo set |
+| Axum | in neither logo set |
+| Beanstalkd | in neither logo set |
+| BullMQ | in neither logo set |
+| Conductor | in neither logo set |
+| Confluent | in neither logo set |
+| CoreDNS | in neither logo set |
+| CyberArk Conjur | in neither logo set |
+| Dagster | in neither logo set |
+| Debezium | in neither logo set |
+| Descope | in neither logo set |
+| DocuSign | in neither logo set |
+| Dokku | in neither logo set |
+| Doppler | in neither logo set |
+| Dragonfly | in neither logo set |
+| Dremio | in neither logo set |
+| DSPy | in neither logo set |
+| Echo | in neither logo set |
+| Ehcache | in neither logo set |
+| EMQX | in neither logo set |
+| Encore | in neither logo set |
+| Fiber | in neither logo set |
+| Firebolt | in neither logo set |
+| Fireworks AI | SVG Logos has only a wide wordmark |
+| Fivetran | in neither logo set |
+| Flowise | in neither logo set |
+| Gravitee | in neither logo set |
+| Groq | SVG Logos has only a wide wordmark |
+| Hangfire | in neither logo set |
+| HAProxy | in neither logo set |
+| Hatchet | in neither logo set |
+| Hazelcast | in neither logo set |
+| Helicone | in neither logo set |
+| Honeycomb | in neither logo set |
+| IBM MQ | in neither logo set; IBM's logo is only a wide wordmark |
+| Infisical | in neither logo set |
+| Inngest | in neither logo set |
+| Kestra | in neither logo set |
+| KrakenD | in neither logo set |
+| KServe | in neither logo set |
+| LiteLLM | in neither logo set |
+| llama.cpp | in neither logo set |
+| LlamaIndex | in neither logo set |
+| Manticore Search | in neither logo set |
+| Mastra | in neither logo set |
+| Micronaut | in neither logo set |
+| Momento | in neither logo set |
+| MotherDuck | in neither logo set |
+| NS1 | in neither logo set |
+| Oracle Database | in neither logo set; Oracle's logo is only a wide wordmark |
+| ParadeDB | in neither logo set |
+| Plaid | in neither logo set |
+| Portkey | in neither logo set |
+| PowerDNS | in neither logo set |
+| Quickwit | in neither logo set |
+| Redpanda | in neither logo set |
+| Resque | in neither logo set |
+| Restate | in neither logo set |
+| RQ | in neither logo set |
+| SGLang | in neither logo set |
+| Starburst | in neither logo set |
+| StarRocks | in neither logo set |
+| Strands Agents | in neither logo set; AWS's logo is only a wide wordmark |
+| Stytch | SVG Logos has only a wide wordmark |
+| Tigris | in neither logo set |
+| Trigger.dev | in neither logo set |
+| Turbopuffer | in neither logo set |
+| Tyk | in neither logo set |
+| Varnish | in neither logo set |
+| Voyage AI | in neither logo set |
+| WarpStream | in neither logo set |
+| Windmill | in neither logo set |
+| Zabbix | SVG Logos has only a wide wordmark |
+| ZeroMQ | in neither logo set |
+| Zitadel | in neither logo set |

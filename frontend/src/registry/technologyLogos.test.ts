@@ -53,11 +53,14 @@ describe("technologyMark", () => {
     for (const name of [...Object.keys(MAKER_LOGOS), ...NO_LOGO]) expect(listed, name).toContain(name);
   });
 
-  it("is documented: each borrowed logo, and each technology with none, is in docs/technology-logos.md", () => {
-    const doc = readFileSync(new URL("../../../docs/technology-logos.md", import.meta.url), "utf8");
-    for (const [name, maker] of Object.entries(MAKER_LOGOS)) expect(doc, name).toContain(`| ${name} | ${maker} |`);
-    for (const name of NO_LOGO) expect(doc, name).toContain(`| ${name} |`);
-  });
+  it.each(["technology-logos.md", "technology-logos.zh-CN.md"])(
+    "is documented: each borrowed logo, and each technology with none, is in docs/%s",
+    (file) => {
+      const doc = readFileSync(new URL(`../../../docs/${file}`, import.meta.url), "utf8");
+      for (const [name, maker] of Object.entries(MAKER_LOGOS)) expect(doc, name).toContain(`| ${name} | ${maker} |`);
+      for (const name of NO_LOGO) expect(doc, name).toContain(`| ${name} |`);
+    },
+  );
 });
 
 describe("box colours used for logo contrast", () => {

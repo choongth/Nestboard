@@ -1,143 +1,145 @@
-# 组织、项目与权限 设计规格
+# Organizations, projects and permissions: design spec
 
-## 1. 目标与范围
+**English** | [简体中文](./access-design.zh-CN.md)
 
-让 Nestboard 能在一家公司(哪怕是跨国公司)里使用:必须登录;人和团队属于组织;图表和 ADR 属于项目;谁能看、谁能改,可以细到**一个框**。
+## 1. Goals and scope
 
-参照 IcePanel:可以把一个人或一个组设为某个框(服务)的**负责人**。负责人还能把框里面的部分再分给别人,一层层往下分,和框的嵌套是同一棵树。
+Make Nestboard usable inside a company (even a multinational one): signing in is required; people and teams belong to organizations; diagrams and ADRs belong to projects; who can see and who can change things can be set down to **a single box**.
 
-暂不包含:单点登录(SSO)、邮件发送、计费、实时协作。
+Modelled on IcePanel: a person or a group can be made the **owner** of a box (a service). An owner can hand parts of the box's inside on to others, level by level, along the same tree as the boxes' nesting.
 
-## 2. 核心原则
+Not included: single sign-on (SSO), sending email, billing. (Live collaboration, also left out here, came later in v0.9.)
 
-1. **一条规则管权限。** 所有访问权限都来自"授权"(第 5 节),不为项目、框、ADR 各设一套。
-2. **授权沿着树往下覆盖。** 框上的授权覆盖框里面的一切;取最高的那一个。
-3. **职位不是权限。** Developer、Architect、CTO 只用于显示,永远不参与权限判断。
-4. **组织之间完全隔离。** 不属于某个组织的人,访问它的任何东西都得到 404,和不存在一样。
-5. **权限只在后端判断。** 前端据此把不能改的框显示为锁定,但最终以后端为准。
+## 2. Core principles
 
-## 3. 层级
+1. **One rule for permissions.** All access comes from "grants" (section 5); there's no separate scheme for projects, boxes and ADRs.
+2. **Grants reach down the tree.** A grant on a box covers everything inside it; the highest applicable grant wins.
+3. **Job titles aren't permissions.** Developer, Architect, CTO are for display only and never take part in permission checks.
+4. **Organizations are fully isolated.** Someone outside an organization gets 404 for anything in it, as if it didn't exist.
+5. **Permissions are decided by the backend only.** The frontend uses them to show boxes you can't change as locked, but the backend has the final say.
+
+## 3. Levels
 
 ```
-Nestboard 实例(一台服务器)
-└── 组织            如 "Acme Corp"      成员、职位、组
-    ├── 组          如 "Engineering ▸ Platform"(可嵌套)
-    └── 项目        如 "Checkout"        成员、授权
-        ├── 图表(一张或多张)
-        └── ADR     每条属于整个项目,或项目中的一个框
+Nestboard instance (one server)
+└── Organization      e.g. "Acme Corp"     members, job titles, groups
+    ├── Group         e.g. "Engineering ▸ Platform" (can be nested)
+    └── Project       e.g. "Checkout"      members, grants
+        ├── Diagrams (one or more)
+        └── ADRs      each belongs to the whole project, or to one box in it
 ```
 
-- **用户**属于整个实例:一个邮箱、一个密码。一个用户可以加入**多个组织**(例如同时服务两家客户的顾问)。
-- 组、项目、图表、ADR、授权都只属于一个组织。
+- **Users** belong to the whole instance: one email, one password. A user can join **several organizations** (for example a consultant working for two clients).
+- Groups, projects, diagrams, ADRs and grants each belong to exactly one organization.
 
-## 4. 组织
+## 4. Organizations
 
-### 4.1 角色
+### 4.1 Roles
 
-| 角色 | 能做什么 |
+| Role | Can |
 |---|---|
-| **Org Owner** | Admin 的全部权限;删除组织;任命和撤销 Admin。组织至少保留一个 Owner |
-| **Org Admin** | 邀请和移除成员;设置职位;管理所有组;打开或关闭成员的"可以创建项目";看到所有项目的**名称**;接管项目(4.3) |
-| **Member** | 看到自己有授权的项目;打开了"可以创建项目"时可以建项目 |
+| **Org Owner** | everything an Admin can; delete the organization; appoint and remove Admins. An organization keeps at least one Owner |
+| **Org Admin** | invite and remove members; set job titles; manage all groups; turn members' "can create projects" on or off; see the **names** of all projects; take over projects (4.3) |
+| **Member** | see the projects they have grants on; create projects when "can create projects" is on |
 
-- 只有**实例管理员**能创建组织(第一个注册的用户就是实例管理员),并成为它的第一位 Org Owner。要交给真正的负责人:邀请对方为 Owner,然后自己退出。
-- **可以创建项目**:每个成员一个开关,由 Admin 控制。Owner 和 Admin 始终可以;新成员默认关闭。
-- 移除一个成员时,同时删除他在这个组织里的所有授权和组成员身份。
+- Only the **instance admin** can create organizations (the first user to sign up is the instance admin), becoming its first Org Owner. To hand it to the real owner: invite them as Owner, then leave.
+- **Can create projects**: a switch per member, controlled by Admins. Owners and Admins always can; it's off for new members.
+- Removing a member also deletes all their grants and group memberships in that organization.
 
-### 4.2 职位
+### 4.2 Job titles
 
-每个人在每个组织里有一个职位(自由文字,可留空),由 Admin 设置。显示在成员列表和 ADR 历史中;框上的负责人标记只显示名字。
+Everyone has one job title in each organization (free text, may be empty), set by Admins. It's shown in the member list and in ADR history; the owner mark on a box shows only the name.
 
-### 4.3 Admin 与项目内容
+### 4.3 Admins and project content
 
-Admin 能看到所有项目的名称,但**看内容需要授权**。如果项目的 Owner 离开了,或者需要处理,Admin 可以**接管**:把自己设为该项目的 Owner。接管会记录在项目的活动记录里(谁、何时),项目成员都能看到。
+Admins can see every project's name, but **seeing its content takes a grant**. If a project's Owner has left, or something needs sorting out, an Admin can **take over**: make themselves the project's Owner. Taking over is recorded in the project's activity log (who and when), visible to the project's members.
 
-## 5. 授权
+## 5. Grants
 
 ```
-授权 = 谁(用户或组) + 范围(整个项目,或某个框) + 角色(Viewer / Editor / Owner)
+grant = who (a user or a group) + scope (the whole project, or one box) + role (Viewer / Editor / Owner)
 ```
 
-- 框上的授权覆盖这个框以及它里面所有层级的框和连线。
-- 一个人在某个框上的角色 = 这个框、它所有上层框、整个项目上,所有适用于他的授权(包括通过组得到的)中**最高**的那个。
-- 只有组织成员才能得到授权。
-- 只有框上授权的人也能看到整个项目,在框以外算 Viewer:否则他连自己负责的框都看不到。
-- 框上的 Owner 不算项目的 Owner:"项目至少保留一个 Owner"只看整个项目的授权。
-- 授权存在数据库里,**不写进图表文件**:导出图表不会带出谁有权限。
+- A grant on a box covers the box and every level of boxes and connections inside it.
+- A person's role on a box = the **highest** of all grants that apply to them (including through groups) on that box, on every box above it, and on the whole project.
+- Only organization members can receive grants.
+- Someone with grants only on boxes can still see the whole project, counting as a Viewer outside those boxes: otherwise they couldn't even see the boxes they own.
+- An Owner on a box isn't a project Owner: "a project keeps at least one Owner" looks only at grants on the whole project.
+- Grants live in the database and are **not written into diagram files**: exporting a diagram doesn't reveal who has access.
 
-### 5.1 角色能做什么
+### 5.1 What each role can do
 
 | | Viewer | Editor | Owner |
 |---|---|---|---|
-| 查看图表和 ADR | ✓ | ✓ | ✓ |
-| 在范围内画图、修改 | | ✓ | ✓ |
-| 在范围内提议 ADR、修改提议中的 ADR | | ✓ | ✓ |
-| 接受、否决、废弃范围内的 ADR | | | ✓ |
-| 在范围内授权(分配负责人) | | | ✓ |
-| 新建图表 | | 整个项目的 Editor | ✓ |
-| 删除图表,重命名 / 删除项目 | | | 仅项目 Owner |
+| View diagrams and ADRs | ✓ | ✓ | ✓ |
+| Draw and change things within the scope | | ✓ | ✓ |
+| Propose ADRs within the scope, change proposed ADRs | | ✓ | ✓ |
+| Accept, reject, deprecate ADRs within the scope | | | ✓ |
+| Grant access within the scope (assign owners) | | | ✓ |
+| Create diagrams | | Editors of the whole project | ✓ |
+| Delete diagrams, rename / delete the project | | | project Owners only |
 
-- 框上的 Owner 授权就是**负责人**,在框上显示负责人的名字或组名。
-- 委派可以任意深:Payments 的负责人可以让别人负责 Payments ▸ Ledger,但碰不到 Payments 之外、之上的东西。
-- 项目的创建者自动成为项目 Owner。项目至少保留一个 Owner(用户或组)。
+- An Owner grant on a box makes its holder the box's **owner**; the box shows the owner's name or group name.
+- Delegation can go as deep as needed: the owner of Payments can make someone else owner of Payments ▸ Ledger, but can't touch anything outside or above Payments.
+- A project's creator becomes its Owner automatically. A project keeps at least one Owner (a user or a group).
 
-### 5.2 例子
+### 5.2 Examples
 
-| 人 | 授权 | 结果 |
+| Person | Grant | Result |
 |---|---|---|
-| 项目创建者 | 项目 Owner | 一切 |
-| 大经理 | 项目 Owner | 分配各团队负责的服务;写整体 ADR |
-| Payments 组长 | Payments 框 Owner | 改 Payments 里面;写、接受 Payments 的 ADR;分配 Payments 里的框 |
-| 开发者 | Payments ▸ Ledger 框 Editor | 只能改 Ledger 里面;可以提议 Ledger 的 ADR |
-| 其他人 | 项目 Viewer | 只读 |
+| Project creator | project Owner | everything |
+| Senior manager | project Owner | assigns the services each team owns; writes project-wide ADRs |
+| Payments lead | Owner of the Payments box | changes the inside of Payments; writes and accepts Payments ADRs; assigns boxes inside Payments |
+| Developer | Editor of the Payments ▸ Ledger box | can change only the inside of Ledger; can propose Ledger ADRs |
+| Everyone else | project Viewer | read-only |
 
-## 6. 组
+## 6. Groups
 
-- 组属于组织,可以在多个项目中使用。
-- **组可以嵌套**:每个组最多有一个上层组(如 Engineering ▸ Platform ▸ Payments),最多 10 层,不能形成环。
-- **成员身份向上算**:Payments 组的成员也算 Platform 和 Engineering 的成员。所以授权给 Engineering,就覆盖它所有下层组里的人。
-- 每个组有**组长**:组长能管理这个组和它所有下层组:成员与组长、名称与说明、下层组。Org Admin 能管理所有组。
-- **新建、移动、删除**一个组改变的是它的上一层,所以需要管理上一层的权限(顶层的组需要 Org Admin)。移动时,离开的那一层和进入的那一层都要有权限;下层组跟着一起移动。
-- 同一个上层组下(包括顶层)组名不能重复,不区分大小写。
-- 有下层组的组不能直接删除,要先移走或删除下层组。删除组不会把成员移出组织。
-- 组织的所有成员都能看到全部组和组里的人;任何人都可以自己退出一个组。离开组织时,同时退出它的所有组。
+- Groups belong to the organization and can be used in several projects.
+- **Groups can be nested**: each group has at most one parent group (e.g. Engineering ▸ Platform ▸ Payments), at most 10 levels, with no cycles.
+- **Membership counts upwards**: members of Payments also count as members of Platform and Engineering. So a grant to Engineering covers the people in all the groups under it.
+- Each group has **leads**: a lead can manage the group and every group under it: members and leads, name and description, the groups below. Org Admins can manage all groups.
+- **Creating, moving and deleting** a group changes the level above it, so it takes the right to manage that level (Org Admin for top-level groups). Moving needs that right on both the level it leaves and the level it joins; the groups under it move along.
+- Group names under the same parent (including the top level) must differ, ignoring case.
+- A group with groups under it can't be deleted until those are moved or deleted. Deleting a group doesn't remove its members from the organization.
+- Every member of the organization can see all groups and who's in them; anyone can leave a group on their own. Leaving the organization also leaves all its groups.
 
-## 7. 图表保存规则
+## 7. Saving diagrams
 
-保存时只发送改动的框和连线,每处改动都必须落在你是 Editor 或 Owner 的范围内,否则整次保存被拒绝,并说明是哪个框。每种改动需要什么权限,见[后端说明](../server/README.md)的"保存图表时的检查"。编辑器这边:
+Saving sends only the boxes and connections that changed, and every change must fall within a scope where you're Editor or Owner; otherwise the whole save is refused, naming the box. What each kind of change requires is in "保存图表时的检查" (checks when saving a diagram) in the [backend notes](../server/README.md). In the editor:
 
-- 打开图表时同时取得你在每个框上的角色,把不能改的框显示为锁定,不等到保存时才报错;只有能编辑当前这一层的人,拖动连线时才会出现"External box…"。
-- 剪切粘贴会生成新的框,授权不会跟着走;剪切有负责人的框之前,编辑器会提醒。
+- Opening a diagram also fetches your role on every box, so boxes you can't change are shown locked instead of failing at save time; "External box…" only appears while dragging a connection for people who can edit the current level.
+- Cut and paste creates new boxes, and grants don't travel with them; the editor warns before cutting boxes that have owners.
 
-## 8. ADR
+## 8. ADRs
 
-- ADR 属于**项目**,在项目内编号(ADR-0001…);每条 ADR 有一个**范围**:整个项目,或某张图表中的一个框。
-- 在某个范围内,Editor 可以提议 ADR,Owner 可以接受、否决、废弃(第 5.1 节)。
-- ADR **只能关联范围内的框和连线**:范围的框本身、它里面的框,以及至少一端在其中的连线。整个项目范围的 ADR 可以关联项目内任意图表的框和连线。
-- 提议中的 ADR 可以移到另一个范围:需要原范围和新范围的 Editor,现有的关联都必须在新范围内。接受或否决后范围不能再改。取代一条 ADR 时,新 ADR 沿用它的范围。
-- 范围的框(或图表)被删除后,ADR 保留(它是决定的记录),范围标为"已删除";此后只看整个项目的角色。删除图表不会删除 ADR,删除项目才会。
-- 决策页面按范围显示成一棵树:项目范围的 ADR 在最上面,其下按框的层级分组。
-- **关系**:可以对任何能看到的 ADR 建立"相关"或"修订"关系;**取代**一条 ADR 需要该 ADR 所在范围的 Owner 权限(建立取代关系、以它为底稿新建、接受取代它的 ADR 时都检查)。
-- 每个历史版本记录**由谁**完成,如"Accepted by Alice (Architect)";名称和职位按当时保存。导出的 Markdown 写明谁提议、谁接受或否决。
-- ADR 原有的状态流转、锁定、关联保留、导出等规则不变(见[后端说明](../server/README.md))。
-- 原有的 ADR 迁移为整个项目范围,在项目内重新编号(按图表的创建时间,图表内按原编号)。
+- ADRs belong to the **project** and are numbered within it (ADR-0001…); each ADR has a **scope**: the whole project, or one box in one diagram.
+- Within a scope, Editors can propose ADRs and Owners can accept, reject and deprecate them (section 5.1).
+- An ADR **can only link boxes and connections within its scope**: the scope's box itself, the boxes inside it, and connections with at least one end in it. Project-wide ADRs can link boxes and connections in any of the project's diagrams.
+- A proposed ADR can be moved to another scope: this needs Editor on both the old and the new scope, and every existing link must be within the new scope. Once accepted or rejected, the scope can't change. Superseding an ADR gives the new ADR the same scope.
+- When the scope's box (or diagram) is deleted, the ADR stays (it's the record of a decision) with its scope marked "deleted"; from then on only roles on the whole project count. Deleting a diagram doesn't delete ADRs; deleting the project does.
+- The Decisions page shows the scopes as a tree: project-wide ADRs at the top, the rest grouped by box level below.
+- **Relations**: "relates to" and "amends" can be set on any ADR you can see; **superseding** an ADR takes Owner on that ADR's scope (checked when setting the relation, when creating from it, and when accepting the ADR that supersedes it).
+- Every history version records **who** made it, such as "Accepted by Alice (Architect)"; names and job titles are kept as they were at the time. Exported Markdown says who proposed it and who accepted or rejected it.
+- The existing ADR rules (status flow, locking, keeping links, export and so on) are unchanged (see the [backend notes](../server/README.md)).
+- Existing ADRs were migrated to project scope and renumbered within the project (by diagram creation time, then by their old number within each diagram).
 
-## 9. 账号与登录
+## 9. Accounts and signing in
 
-- 邮箱 + 密码。密码用 argon2 散列;会话存在 httpOnly cookie 中;连续登录失败会逐渐变慢。
-- 第一个注册的用户成为**实例管理员**。之后不开放自由注册,只能通过邀请加入。
-- **邀请链接**:Org Admin 生成链接,自己发给对方(不需要邮件服务器)。打开链接即可注册或登录并加入组织。链接有有效期,可以撤销。
-- **重置密码**:只有实例管理员能生成重置链接(一次性,1 到 72 小时)。Org Admin 不能:一个人可能同时属于其他组织,能重置他的密码就等于能进入那些组织。以后接入邮件后再支持自助重置。
+- Email + password. Passwords are hashed with argon2; the session lives in an httpOnly cookie; repeated failed sign-ins get progressively slower.
+- The first user to sign up becomes the **instance admin**. After that there's no open sign-up: people join only through invitations.
+- **Invitation links**: an Org Admin makes a link and sends it themselves (no mail server needed). Opening it lets you sign up or sign in and join the organization. Links expire and can be revoked.
+- **Password reset**: only the instance admin can make reset links (one-time, valid 1 to 72 hours). Org Admins can't: a person may belong to other organizations too, and being able to reset their password would mean being able to get into those. Self-service reset can come once email is connected.
 
-## 10. 页面
+## 10. Pages
 
-- 登录、注册(仅限邀请链接)、接受邀请。
-- **顶栏左侧**:Nestboard 菜单(所有组织、各组织的页面) / 组织 / 项目(切换项目) / 页面(Editor / Decisions / People)。
-- **组织页面**(`/organizations`,也是首页):左侧是你所在的组织;选中一个组织后,右侧标签 Invitations(Admin)/ Members / Groups / Projects,默认 Projects,有权限时显示 **New project**。只属于一个组织时直接打开它。
-- **People**(项目内):成员、组、授权,按框的层级显示成树;一眼看出谁负责什么。
-- **框的侧边栏**:"Access"一栏列出负责人和其他授权,是 Owner 时可以分配负责人。
-- 所有页面都在 `/organizations/…` 之下,用 id 而不是名称:网址形如 `/organizations/<组织 id>/projects/<项目 id>/editor?diagram=…`,不透露组织或项目的名称。
+- Sign in, sign up (only through an invitation link), accept an invitation.
+- **Left of the top bar**: the Nestboard menu (all organizations, each organization's page) / organization / project (switches projects) / page (Editor / Decisions / People).
+- **Organizations page** (`/organizations`, also the home page): your organizations on the left; with one chosen, the tabs Invitations (Admins) / Members / Groups / Projects on the right, Projects first, with **New project** when allowed. With only one organization, it opens straight away.
+- **People** (inside a project): members, groups and grants, shown as a tree following the box levels, so you can see at a glance who owns what.
+- **The box sidebar**: the "Access" section lists the owner and other grants; Owners can assign owners there.
+- All pages live under `/organizations/…` and use ids rather than names: addresses look like `/organizations/<organization id>/projects/<project id>/editor?diagram=…`, revealing neither the organization's nor the project's name.
 
-## 11. 实现情况
+## 11. Status
 
-已全部完成(v0.7,见[路线图](./ROADMAP.md))。上线时清空了原有的图表和 ADR。
+All done (v0.7, see the [Roadmap](./ROADMAP.md)). The existing diagrams and ADRs were cleared when it went live.
